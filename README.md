@@ -30,14 +30,12 @@ return timezone.make_aware(value, timezone.get_current_timezone())
 
 En supprimant le paramètre `is_dst`, l'erreur liée à cet argument obsolète devrait être évitée.
 
-```
-
 ## Lancer le script de seed
 
 Pour lancer le script de seed, exécute la commande suivante :
 
 ```bash
 python run_seed.py
-
+```
 
 
