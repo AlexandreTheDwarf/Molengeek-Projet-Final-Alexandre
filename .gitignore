@@ -1,0 +1,6 @@
+# Ignorer l'environnement virtuel
+/env/
+
+# Ignorer la base de données SQLite
+/backend/db.sqlite3
+
