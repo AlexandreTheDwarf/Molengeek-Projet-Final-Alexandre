@@ -1,4 +1,3 @@
-````markdown
 # Molengeek-Projet-Final-Alexandre
 
 ## Modification de la bibliothèque django-seed
@@ -39,6 +38,6 @@ Pour lancer le script de seed, exécute la commande suivante :
 
 ```bash
 python run_seed.py
-````
+
 
 
