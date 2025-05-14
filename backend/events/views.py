@@ -1,3 +1,51 @@
-from django.shortcuts import render
+from rest_framework import generics
+from .models import Event, Article, AvisEvent, Inscription
+from .serializers import EventSerializer, ArticleSerializer, AvisEventSerializer, InscriptionSerializer
 
-# Create your views here.
+class EventListView(generics.ListAPIView):
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
+
+class EventListCreateView(generics.ListCreateAPIView):
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
+
+class EventDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Event.objects.all()
+    serializer_class = EventSerializer
+
+class ArticleListView(generics.ListAPIView):
+    queryset = Article.objects.all()
+    serializer_class = ArticleSerializer
+
+class ArticleListCreateView(generics.ListCreateAPIView):
+    queryset = Article.objects.all()
+    serializer_class = ArticleSerializer 
+
+class ArticleDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Article.objects.all()
+    serializer_class = ArticleSerializer
+
+class AvisEventListView(generics.ListAPIView):
+    queryset = AvisEvent.objects.all()
+    serializer_class = AvisEventSerializer
+
+class AvisEventListCreateView(generics.ListCreateAPIView):
+    queryset = AvisEvent.objects.all()
+    serializer_class = AvisEventSerializer
+
+class AvisEventDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = AvisEvent.objects.all()
+    serializer_class = AvisEventSerializer
+
+class InscriptionListView(generics.ListAPIView):
+    queryset = Inscription.objects.all()
+    serializer_class = InscriptionSerializer
+
+class InscriptionListCreateView(generics.ListCreateAPIView):
+    queryset = Inscription.objects.all()
+    serializer_class = InscriptionSerializer
+
+class InscriptionDetailView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Inscription.objects.all()
+    serializer_class = InscriptionSerializer
