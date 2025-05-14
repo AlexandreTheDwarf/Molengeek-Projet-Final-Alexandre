@@ -19,7 +19,7 @@ class AvisEventSerializer(serializers.ModelSerializer):
 class ArticleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Article
-        fields = ['titre', 'categorie', 'contenu', 'image_banner', 'auteur']
+        fields = ['titre', 'categorie', 'contenu', 'image_banner', 'auteur', 'date_creation']
 
     def validate_image_banner(self, value):
         if value and value.size > 10 * 1024 * 1024:  # 10 MB max
