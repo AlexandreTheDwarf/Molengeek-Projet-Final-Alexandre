@@ -4,10 +4,8 @@ from django.utils.timezone import now
 from django.contrib.auth.models import Group
 from .models import User, Article, Event, Inscription
 import random
-from datetime import timedelta
 
 from django.utils import timezone
-from datetime import datetime
 
 def custom_make_aware(value):
     return timezone.make_aware(value, timezone.get_current_timezone())

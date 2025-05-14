@@ -1,6 +1,13 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+def get_sentinel_user():
+        # This function will be called when a User is deleted
+        # It sets the `banned` field to True for all related AvisEvent instances
+        def set_banned(avis_events, **kwargs):
+            avis_events.update(banned=True)
+        return set_banned
+
 class Event(models.Model):
     FORMAT_CHOICES = [
         ('commander', 'Commander'),
@@ -47,7 +54,7 @@ class Inscription(models.Model):
 
 class AvisEvent(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='avis')
-    author = models.ForeignKey(User, on_delete=models.CASCADE)
+    author = models.ForeignKey(User, on_delete=models.SET(get_sentinel_user), related_name='avis_events')
     positif = models.BooleanField()
     commentaire = models.TextField()
     date_poste = models.DateTimeField(auto_now_add=True)
@@ -55,6 +62,7 @@ class AvisEvent(models.Model):
 
     def __str__(self):
         return f"Avis de {self.author.username} sur {self.event.nom}"
+
 
 class Article(models.Model):
     CATEGORIE_CHOICES = [
