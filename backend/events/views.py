@@ -1,4 +1,5 @@
 from rest_framework import generics
+from django.db.models import F
 from .models import Event, Article, AvisEvent, Inscription
 from .serializers import EventSerializer, ArticleSerializer, AvisEventSerializer, InscriptionSerializer
 
@@ -60,13 +61,19 @@ class EarlyEventsListView(generics.ListAPIView):
 
     def get_queryset(self):
         return Event.objects.all().order_by('-date')[:10]  # Get the 10 most recent events
-    
+
 class LastChanceEventsListView(generics.ListAPIView):
     serializer_class = EventSerializer
 
     def get_queryset(self):
-        # Get events with at least one spot available, ordered by the number of participants
-        return Event.objects.filter(nombre_participant__gt=0).order_by('-nombre_participant')[:5]
+        # Calcule le nombre de places restantes
+        return Event.objects.annotate(
+            places_restantes=F('nombre_participant_max') - F('nombre_participant')
+        ).filter(
+            places_restantes__lte=5,
+            places_restantes__gt=0  
+        ).order_by('-places_restantes')[:5]
+
 
 class LatestArticlesListView(generics.ListAPIView):
     serializer_class = ArticleSerializer

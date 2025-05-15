@@ -1,11 +1,19 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
+// Fonction utilitaire pour formater la date
+const formatDate = (dateString) => {
+  const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
+  return new Date(dateString).toLocaleDateString(undefined, options);
+};
 
 function Home({ setMessage }) {
   const [user, setUser] = useState(null);
   const [earlyEvents, setEarlyEvents] = useState([]);
   const [lastChanceEvents, setLastChanceEvents] = useState([]);
   const [latestArticles, setLatestArticles] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -63,78 +71,110 @@ function Home({ setMessage }) {
   };
 
   return (
-    <div>
-      <h1>Homepage</h1>
+    <div className="container mx-auto p-4">
+      <h1 className="text-3xl font-bold mb-4">Homepage</h1>
       {user ? (
-        <div>
-          <a href="/register"><button>Inscription</button></a>
-          <a href="/login"><button>Connexion</button></a>
-          <a href="/articles/"><button>All Articles</button></a>
-          <a href="/article/create"><button>Create Article</button></a>
-          <a href="/event/"><button>All Events</button></a>
-          <a href="/event/create"><button>Create Event</button></a>
-          <a href="/event/avis/create"><button>Create Avis</button></a>
-          <a href="/event/inscriptions/create"><button>Create Inscriptions</button></a>
-          <button onClick={logout}>Logout</button>
-          <h2>Bienvenue {user.username} !</h2>
+        <div className="mb-4">
+          <button onClick={() => navigate("/register")} className="bg-blue-500 text-white px-4 py-2 rounded mr-2">Inscription</button>
+          <button onClick={() => navigate("/login")} className="bg-green-500 text-white px-4 py-2 rounded mr-2">Connexion</button>
+          <button onClick={() => navigate("/articles/")} className="bg-purple-500 text-white px-4 py-2 rounded mr-2">All Articles</button>
+          <button onClick={() => navigate("/article/create")} className="bg-indigo-500 text-white px-4 py-2 rounded mr-2">Create Article</button>
+          <button onClick={() => navigate("/event/")} className="bg-yellow-500 text-white px-4 py-2 rounded mr-2">All Events</button>
+          <button onClick={() => navigate("/event/create")} className="bg-pink-500 text-white px-4 py-2 rounded mr-2">Create Event</button>
+          <button onClick={() => navigate("/event/avis/create")} className="bg-teal-500 text-white px-4 py-2 rounded mr-2">Create Avis</button>
+          <button onClick={() => navigate("/event/inscriptions/create")} className="bg-orange-500 text-white px-4 py-2 rounded">Create Inscriptions</button>
+          <button onClick={logout} className="bg-red-500 text-white px-4 py-2 rounded">Logout</button>
+          <h2 className="text-xl font-semibold">Bienvenue {user.username} !</h2>
           <p>ID utilisateur : {user.id}</p>
         </div>
       ) : (
-        <div>
-          <a href="/register"><button>Inscription</button></a>
-          <a href="/login"><button>Connexion</button></a>
-          <a href="/articles/"><button>All Articles</button></a>
-          <a href="/article/create"><button>Create Article</button></a>
-          <a href="/event/"><button>All Events</button></a>
-          <a href="/event/create"><button>Create Event</button></a>
-          <a href="/event/avis/create"><button>Create Avis</button></a>
-          <a href="/event/inscriptions/create"><button>Create Inscriptions</button></a>
+        <div className="mb-4">
+          <button onClick={() => navigate("/register")} className="bg-blue-500 text-white px-4 py-2 rounded mr-2">Inscription</button>
+          <button onClick={() => navigate("/login")} className="bg-green-500 text-white px-4 py-2 rounded mr-2">Connexion</button>
+          <button onClick={() => navigate("/articles/")} className="bg-purple-500 text-white px-4 py-2 rounded mr-2">All Articles</button>
+          <button onClick={() => navigate("/article/create")} className="bg-indigo-500 text-white px-4 py-2 rounded mr-2">Create Article</button>
+          <button onClick={() => navigate("/event/")} className="bg-yellow-500 text-white px-4 py-2 rounded mr-2">All Events</button>
+          <button onClick={() => navigate("/event/create")} className="bg-pink-500 text-white px-4 py-2 rounded mr-2">Create Event</button>
+          <button onClick={() => navigate("/event/avis/create")} className="bg-teal-500 text-white px-4 py-2 rounded mr-2">Create Avis</button>
+          <button onClick={() => navigate("/event/inscriptions/create")} className="bg-orange-500 text-white px-4 py-2 rounded">Create Inscriptions</button>
         </div>
       )}
 
       {/* Hero Section */}
-      <section className="hero-section">
-        <h2>Welcome to Our Community</h2>
-        <p>Discover the latest events and articles from our community.</p>
+      <section className="hero-section bg-gray-100 p-6 rounded-lg mb-6">
+        <h2 className="text-2xl font-bold mb-2">Welcome to Our Community</h2>
+        <p className="text-lg">Discover the latest events and articles from our community.</p>
       </section>
 
       {/* Early Events Section */}
-      <section className="early-events-section">
-        <h2>Early Events</h2>
-        <div className="events-list">
+      <section className="mb-6">
+        <h2 className="text-2xl font-bold mb-4">Early Events</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {earlyEvents.map(event => (
-            <div key={event.id} className="event-card">
-              <h3>{event.nom}</h3>
-              <img src={event.banner_img} alt={event.nom} />
-              <p>{event.description}</p>
+            <div key={event.id} className="bg-white p-4 rounded-lg shadow-md">
+              <img src={event.banner_img} alt={event.nom} className="w-full h-48 object-cover rounded mb-2" />
+              <h3 className="text-xl font-semibold">{event.nom}</h3>
+              <p>Date de l'event: {formatDate(event.date)}</p>
+              <p>Participants : <span className={event.nombre_participant_max - event.nombre_participant <= 5 ? "text-red-600 font-bold" : ""}>{event.nombre_participant}/{event.nombre_participant_max}</span></p>              
+              <p>Format: {event.format}</p>
+              {event.format === "commander" ? (
+                <p>Bracket: {event.bracket_level}</p>
+              ) : (
+                null
+              )}
+              <button
+                onClick={() => navigate(`/event/${event.id}`)}
+                className="mt-2 bg-blue-500 text-white px-4 py-2 rounded"
+              >
+                View Details
+              </button>
             </div>
           ))}
         </div>
       </section>
 
       {/* Last Chance Events Section */}
-      <section className="last-chance-events-section">
-        <h2>Last Chance Events</h2>
-        <div className="events-list">
+      <section className="mb-6">
+        <h2 className="text-2xl font-bold mb-4">Last Chance Events</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {lastChanceEvents.map(event => (
-            <div key={event.id} className="event-card">
-              <h3>{event.nom}</h3>
-              <img src={event.banner_img} alt={event.nom} />
-              <p>{event.description}</p>
+            <div key={event.id} className="bg-white p-4 rounded-lg shadow-md">
+              <img src={event.banner_img} alt={event.nom} className="w-full h-48 object-cover rounded mb-2" />
+              <h3 className="text-xl font-semibold">{event.nom}</h3>
+              <p>Date de l'event: {formatDate(event.date)}</p>
+              <p>Participants: <span className="text-red-600 font-bold">{event.nombre_participant}/{event.nombre_participant_max}</span></p>
+              <p>Format: {event.format}</p>
+              {event.format === "commander" ? (
+                <p>Bracket Level : {event.bracket_level}</p>
+              ) : (
+                null
+              )}
+              <button
+                onClick={() => navigate(`/event/${event.id}`)}
+                className="mt-2 bg-blue-500 text-white px-4 py-2 rounded"
+              >
+                View Details
+              </button>
             </div>
           ))}
         </div>
       </section>
 
       {/* Latest Articles Section */}
-      <section className="latest-articles-section">
-        <h2>Latest Articles</h2>
-        <div className="articles-list">
+      <section>
+        <h2 className="text-2xl font-bold mb-4">Latest Articles</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {latestArticles.map(article => (
-            <div key={article.id} className="article-card">
-              <h3>{article.titre}</h3>
-              <img src={article.image_banner} alt={article.titre} />
-              <p>{article.contenu}</p>
+            <div key={article.id} className="bg-white p-4 rounded-lg shadow-md">
+              <img src={article.image_banner} alt={article.titre} className="w-full h-48 object-cover object-top rounded mb-2" />
+              <h3 className="text-xl font-semibold">{article.titre}</h3>
+              <p>{article.categorie}</p>
+              <button
+                onClick={() => navigate(`/articles/${article.id}`)}
+                className="mt-2 bg-blue-500 text-white px-4 py-2 rounded"
+              >
+                View Details
+              </button>
             </div>
           ))}
         </div>

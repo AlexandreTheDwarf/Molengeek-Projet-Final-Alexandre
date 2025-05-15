@@ -26,14 +26,15 @@ class Event(models.Model):
     bracket_level = models.CharField(max_length=1, choices=BRACKET_CHOICES)
     format = models.CharField(max_length=50, choices=FORMAT_CHOICES)
     banner_img = models.ImageField(upload_to='event_banners/', default='default_banner.jpg')
-    nombre_participant = models.PositiveIntegerField()
+    nombre_participant = models.PositiveIntegerField(default=0)
+    nombre_participant_max = models.PositiveIntegerField(default=2)
     date = models.DateTimeField()
     IRL = models.BooleanField(default=False)
     lieux = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):
         return self.nom
-    
+
     def clean(self):
         if self.IRL and not self.lieux:
             raise ValidationError("Un événement IRL doit obligatoirement avoir un lieu renseigné.")
