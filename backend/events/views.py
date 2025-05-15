@@ -52,3 +52,24 @@ class InscriptionListCreateView(generics.ListCreateAPIView):
 class InscriptionDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Inscription.objects.all()
     serializer_class = InscriptionSerializer
+
+# Special views : 
+
+class EarlyEventsListView(generics.ListAPIView):
+    serializer_class = EventSerializer
+
+    def get_queryset(self):
+        return Event.objects.all().order_by('-date')[:10]  # Get the 10 most recent events
+    
+class LastChanceEventsListView(generics.ListAPIView):
+    serializer_class = EventSerializer
+
+    def get_queryset(self):
+        # Get events with at least one spot available, ordered by the number of participants
+        return Event.objects.filter(nombre_participant__gt=0).order_by('-nombre_participant')[:5]
+
+class LatestArticlesListView(generics.ListAPIView):
+    serializer_class = ArticleSerializer
+
+    def get_queryset(self):
+        return Article.objects.all().order_by('-date_creation')[:5]  # Get the 5 most recent articles
