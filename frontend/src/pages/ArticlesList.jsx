@@ -27,17 +27,25 @@ export default function ArticlesList() {
     navigate(`/articles/${articleId}`);
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>Error: {error}</div>;
+  if (loading) return <div className="text-center py-4">Loading...</div>;
+  if (error) return <div className="text-center py-4 text-red-500">Error: {error}</div>;
 
   return (
-    <div>
-      <h1>Articles</h1>
-      <div className="articles-list">
+    <div className="container mx-auto p-4">
+      <h1 className="text-3xl font-bold mb-6">Articles</h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {articles.map(article => (
-          <div key={article.id} className="article-card" onClick={() => handleArticleClick(article.id)}>
-            <h2>{article.titre}</h2>
-            <img src={article.image_banner} alt={article.titre} />
+          <div
+            key={article.id}
+            className="bg-white p-4 rounded-lg shadow-md cursor-pointer hover:shadow-lg transition-shadow"
+            onClick={() => handleArticleClick(article.id)}
+          >
+            <img
+              src={article.image_banner}
+              alt={article.titre}
+              className="w-full h-48 object-cover rounded mb-2"
+            />
+            <h2 className="text-xl font-semibold mb-2">{article.titre}</h2>
           </div>
         ))}
       </div>

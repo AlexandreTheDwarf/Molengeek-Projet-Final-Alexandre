@@ -81,8 +81,6 @@ function Home({ setMessage }) {
           <button onClick={() => navigate("/article/create")} className="bg-indigo-500 text-white px-4 py-2 rounded mr-2">Create Article</button>
           <button onClick={() => navigate("/event/")} className="bg-yellow-500 text-white px-4 py-2 rounded mr-2">All Events</button>
           <button onClick={() => navigate("/event/create")} className="bg-pink-500 text-white px-4 py-2 rounded mr-2">Create Event</button>
-          <button onClick={() => navigate("/event/avis/create")} className="bg-teal-500 text-white px-4 py-2 rounded mr-2">Create Avis</button>
-          <button onClick={() => navigate("/event/inscriptions/create")} className="bg-orange-500 text-white px-4 py-2 rounded">Create Inscriptions</button>
           <button onClick={logout} className="bg-red-500 text-white px-4 py-2 rounded">Logout</button>
           <h2 className="text-xl font-semibold">Bienvenue {user.username} !</h2>
           <p>ID utilisateur : {user.id}</p>
@@ -95,8 +93,6 @@ function Home({ setMessage }) {
           <button onClick={() => navigate("/article/create")} className="bg-indigo-500 text-white px-4 py-2 rounded mr-2">Create Article</button>
           <button onClick={() => navigate("/event/")} className="bg-yellow-500 text-white px-4 py-2 rounded mr-2">All Events</button>
           <button onClick={() => navigate("/event/create")} className="bg-pink-500 text-white px-4 py-2 rounded mr-2">Create Event</button>
-          <button onClick={() => navigate("/event/avis/create")} className="bg-teal-500 text-white px-4 py-2 rounded mr-2">Create Avis</button>
-          <button onClick={() => navigate("/event/inscriptions/create")} className="bg-orange-500 text-white px-4 py-2 rounded">Create Inscriptions</button>
         </div>
       )}
 

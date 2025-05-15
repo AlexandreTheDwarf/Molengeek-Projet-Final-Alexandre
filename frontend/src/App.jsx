@@ -5,8 +5,6 @@ import Home from './pages/Home'
 import CreateArticle from './pages/CreateArticle' 
 import { useState } from 'react'
 import CreateEvent from './pages/CreateEvent'
-import CreateAvis from './pages/CreateAvis'
-import CreateInscription from './pages/CreateInscription'
 import ArticlesList from './pages/ArticlesList'
 import ArticleDetail from './pages/ArticleDetail'
 import EventsList from './pages/EventsList'
@@ -30,10 +28,6 @@ function App() {
                 <Route path="/event/" element={<EventsList />} />
                 <Route path="/event/:id" element={<EventDetail />} />
                 <Route path="/event/create" element={<CreateEvent />} />
-
-                <Route path="/event/avis/create" element={<CreateAvis />} />
-
-                <Route path="/event/inscriptions/create" element={<CreateInscription />} />
             </Routes>
         </Router>
     )
