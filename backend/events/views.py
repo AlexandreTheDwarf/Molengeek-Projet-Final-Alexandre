@@ -26,9 +26,12 @@ class ArticleDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
 
-class AvisEventListView(generics.ListAPIView):
-    queryset = AvisEvent.objects.all()
+class EventAvisListView(generics.ListAPIView):
     serializer_class = AvisEventSerializer
+
+    def get_queryset(self):
+        event_id = self.kwargs['event_id']
+        return AvisEvent.objects.filter(event_id=event_id)
 
 class AvisEventListCreateView(generics.ListCreateAPIView):
     queryset = AvisEvent.objects.all()

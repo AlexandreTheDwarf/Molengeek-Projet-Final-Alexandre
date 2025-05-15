@@ -42,8 +42,10 @@ function Home({ setMessage }) {
         <div>
           <a href="/register"><button>Inscription</button></a>
           <a href="/login"><button>Connexion</button></a>
-          <a href="/article/"><button>All Articles</button></a>
+          <a href="/articles/"><button>All Articles</button></a>
           <a href="/article/create"><button>Create Article</button></a>
+
+          <a href="/event/"><button>All Events</button></a>
           <a href="/event/create"><button>Create Event</button></a>
           <a href="/event/avis/create"><button>Create Avis</button></a>
           <a href="/event/inscriptions/create"><button>Create Inscriptions</button></a>

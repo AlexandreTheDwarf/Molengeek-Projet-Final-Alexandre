@@ -1,12 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 
 def get_sentinel_user():
-        # This function will be called when a User is deleted
-        # It sets the `banned` field to True for all related AvisEvent instances
-        def set_banned(avis_events, **kwargs):
-            avis_events.update(banned=True)
-        return set_banned
+    return User.objects.get_or_create(username='deleted')[0]
 
 class Event(models.Model):
     FORMAT_CHOICES = [
@@ -36,6 +33,10 @@ class Event(models.Model):
 
     def __str__(self):
         return self.nom
+    
+    def clean(self):
+        if self.IRL and not self.lieux:
+            raise ValidationError("Un événement IRL doit obligatoirement avoir un lieu renseigné.")
 
 class Inscription(models.Model):
     ETAT_CHOICES = [
@@ -62,7 +63,6 @@ class AvisEvent(models.Model):
 
     def __str__(self):
         return f"Avis de {self.author.username} sur {self.event.nom}"
-
 
 class Article(models.Model):
     CATEGORIE_CHOICES = [

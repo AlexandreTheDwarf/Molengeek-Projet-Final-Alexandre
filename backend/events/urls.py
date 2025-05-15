@@ -9,6 +9,7 @@ urlpatterns = [
     path('articles/<int:pk>/', ArticleDetailView.as_view(), name='article-detail'),
 
     path('avis/', AvisEventListCreateView.as_view(), name='avisEvent-list-create'),
+     path('events/<int:event_id>/avis/', EventAvisListView.as_view(), name='event-avis-list'),
     path('avis/<int:pk>/', AvisEventDetailView.as_view(), name='avisEvent-detail'),
 
     path('inscriptions/', InscriptionListCreateView.as_view(), name='inscriptionEvent-list-create'),

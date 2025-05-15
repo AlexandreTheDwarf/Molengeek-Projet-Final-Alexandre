@@ -1,31 +1,30 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export default function ArticlesList() {
   const [articles, setArticles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
-  const fetchArticles = async () => {
-    try {
-      const response = await axios.get('http://localhost:8000/api/articles/');
-      setArticles(response.data);
-      setLoading(false);
-    } catch (err) {
-      setError(err.message);
-      setLoading(false);
-    }
-  };
+    const fetchArticles = async () => {
+      try {
+        const response = await axios.get('http://localhost:8000/api/articles/');
+        setArticles(response.data);
+        setLoading(false);
+      } catch (err) {
+        setError(err.message);
+        setLoading(false);
+      }
+    };
 
-  fetchArticles();
-}, []);
+    fetchArticles();
+  }, []);
 
-
-  const formatDate = (dateString) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    const formattedDate = new Date(dateString).toLocaleDateString(undefined, options);
-    return formattedDate;
+  const handleArticleClick = (articleId) => {
+    navigate(`/articles/${articleId}`);
   };
 
   if (loading) return <div>Loading...</div>;
@@ -36,13 +35,9 @@ export default function ArticlesList() {
       <h1>Articles</h1>
       <div className="articles-list">
         {articles.map(article => (
-          <div key={article.id} className="article-card">
+          <div key={article.id} className="article-card" onClick={() => handleArticleClick(article.id)}>
             <h2>{article.titre}</h2>
             <img src={article.image_banner} alt={article.titre} />
-            <p>{article.contenu}</p>
-            <p>Category: {article.categorie}</p>
-            <p>Author: {article.auteur}</p>
-            <p>Created at: {formatDate(article.date_creation)}</p>
           </div>
         ))}
       </div>
