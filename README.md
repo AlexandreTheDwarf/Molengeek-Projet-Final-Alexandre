@@ -71,6 +71,8 @@ Backend Django REST API + frontend React.
 
 ### Installation & Setup
 
+#### Backend
+
 1. Crée et active ton environnement virtuel :
 
 ```bash
@@ -78,7 +80,7 @@ python -m venv env
 source env/bin/activate  # ou env\Scripts\activate sous Windows
 ```
 
-2. Installe les dépendances :
+2. Installe les dépendances backend :
 
 ```bash
 pip install -r requirements.txt
@@ -102,6 +104,24 @@ python run_seed.py
 ```
 
 ---
+
+#### Frontend
+
+1. Installe les dépendances frontend :
+
+```bash
+npm install
+# ou
+yarn install
+```
+
+2. Lance le serveur de développement :
+
+```bash
+npm run dev
+# ou
+yarn dev
+```
 
 ## Usage
 
