@@ -2,9 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import Register from './pages/register'
 import Login from './pages/login'
 import Home from './pages/Home'
-import CreateArticle from './pages/CreateArticle' 
 import { useState } from 'react'
-import CreateEvent from './pages/CreateEvent'
 import ArticlesList from './pages/ArticlesList'
 import ArticleDetail from './pages/ArticleDetail'
 import EventsList from './pages/EventsList'
@@ -25,11 +23,9 @@ function App() {
 
                 <Route path="/articles/" element={<ArticlesList />} />
                 <Route path="/articles/:id" element={<ArticleDetail />} />
-                <Route path="/article/create" element={<CreateArticle />} />
 
-                <Route path="/event/" element={<EventsList />} />
-                <Route path="/event/:id" element={<EventDetail />} />
-                <Route path="/event/create" element={<CreateEvent />} />
+                <Route path="/events/" element={<EventsList />} />
+                <Route path="/events/:id" element={<EventDetail />} />
             </Routes>
         </Router>
     )

@@ -5,7 +5,7 @@ import axios from 'axios';
 
 Modal.setAppElement('#root');
 
-const CreateEventModal = ({ isOpen, onRequestClose, user }) => {
+const CreateEventModal = ({ isOpen, onRequestClose, user, onEventCreated }) => {
   const [nom, setNom] = useState('');
   const [description, setDescription] = useState('');
   const [bracketLevel, setBracketLevel] = useState('1');
@@ -41,6 +41,9 @@ const CreateEventModal = ({ isOpen, onRequestClose, user }) => {
       });
       console.log('Event créé :', response.data);
       setMessage('Événement créé avec succès!');
+      if (onEventCreated) {
+        onEventCreated(); // ⚡️ Appelle la fonction pour rafraîchir la liste
+      }
       onRequestClose();
     } catch (error) {
       if (error.response) {

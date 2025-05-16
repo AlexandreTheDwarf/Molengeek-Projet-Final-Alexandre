@@ -5,7 +5,9 @@ from .models import Event, Article, AvisEvent, Inscription
 from .serializers import EventSerializer, ArticleSerializer, AvisEventSerializer, InscriptionSerializer
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes
+from .permissions import IsAuthorOrHasChangePermission
 
 class EventListView(generics.ListAPIView):
     queryset = Event.objects.all()
@@ -15,9 +17,16 @@ class EventListCreateView(generics.ListCreateAPIView):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
 
+from rest_framework.permissions import AllowAny, IsAuthenticated
+
 class EventDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Event.objects.all()
     serializer_class = EventSerializer
+
+    def get_permissions(self):
+        if self.request.method in ['PUT', 'PATCH', 'DELETE']:
+            return [IsAuthenticated(), IsAuthorOrHasChangePermission()]
+        return [AllowAny()]
 
 class ArticleListView(generics.ListAPIView):
     queryset = Article.objects.all()
@@ -92,3 +101,27 @@ class CheckRegistrationView(APIView):
         user = request.user
         is_registered = Inscription.objects.filter(event_id=event_id, player=user).exists()
         return Response({'isRegistered': is_registered}, status=status.HTTP_200_OK)
+    
+class GetUserInscriptionsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        try:
+            user = request.user
+            inscriptions = Inscription.objects.filter(player=user).order_by('-event__date')
+            serializer = InscriptionSerializer(inscriptions, many=True)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+class GetUserCreatedEventsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        try:
+            user = request.user
+            events = Event.objects.filter(author=user).order_by('-date')
+            serializer = EventSerializer(events, many=True)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

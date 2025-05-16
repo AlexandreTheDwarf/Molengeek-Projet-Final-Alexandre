@@ -1,5 +1,12 @@
+# urls.py
 from django.urls import path
-from .views import *
+from .views import (
+    EventListCreateView, EventDetailView, EarlyEventsListView, LastChanceEventsListView,
+    ArticleListCreateView, ArticleDetailView, LatestArticlesListView,
+    AvisEventListCreateView, EventAvisListView, AvisEventDetailView,
+    InscriptionListCreateView, InscriptionDetailView,
+    CheckRegistrationView, GetUserInscriptionsView, GetUserCreatedEventsView
+)
 
 urlpatterns = [
     path('events/', EventListCreateView.as_view(), name='event-list-create'),
@@ -12,11 +19,14 @@ urlpatterns = [
     path('articles/latest/', LatestArticlesListView.as_view(), name='latest-articles-list'),
 
     path('avis/', AvisEventListCreateView.as_view(), name='avisEvent-list-create'),
-     path('events/<int:event_id>/avis/', EventAvisListView.as_view(), name='event-avis-list'),
+    path('events/<int:event_id>/avis/', EventAvisListView.as_view(), name='event-avis-list'),
     path('avis/<int:pk>/', AvisEventDetailView.as_view(), name='avisEvent-detail'),
 
     path('inscriptions/', InscriptionListCreateView.as_view(), name='inscriptionEvent-list-create'),
     path('inscriptions/<int:pk>/', InscriptionDetailView.as_view(), name='inscriptionEvent-detail'),
 
     path('inscriptions/check/<int:event_id>/', CheckRegistrationView.as_view(), name='check_registration'),
+    path('get_user_inscriptions/', GetUserInscriptionsView.as_view(), name='get_user_inscriptions'),
+    path('get_user_events/', GetUserCreatedEventsView.as_view(), name='get_user_events'),
+
 ]

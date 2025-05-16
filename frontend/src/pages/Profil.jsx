@@ -2,6 +2,10 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Modal from 'react-modal';
 import CreateEventModal from '../components/CreateEventModal';
+import CreateArticleModal from '../components/CreateArticleModal';
+import UserInscriptions from '../components/UserInscriptions';
+import UserCreatedEvents from '../components/UserCreatedEvents';
+import { useNavigate } from "react-router-dom";
 
 Modal.setAppElement('#root'); 
 
@@ -29,6 +33,11 @@ export default function ProfilePage() {
   const [date, setDate] = useState('');
   const [irl, setIrl] = useState(false);
   const [lieux, setLieux] = useState('');
+
+  const [eventModalIsOpen, setEventModalIsOpen] = useState(false);
+  const [articleModalIsOpen, setArticleModalIsOpen] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -115,6 +124,12 @@ export default function ProfilePage() {
     }
   };
 
+  const [refreshToggle, setRefreshToggle] = useState(false);
+
+  const handleEventCreated = () => {
+    setRefreshToggle(prev => !prev); // toggle force un effet useEffect
+  };
+
   if (loading) return <div className="text-center py-4">Loading...</div>;
   if (error) return <div className="text-center py-4 text-red-500">Error: {error}</div>;
   if (!user) return <div className="text-center py-4">No user found</div>;
@@ -124,6 +139,7 @@ export default function ProfilePage() {
       {/* Sidebar */}
       <div className="w-1/4 bg-gray-100 p-4 h-screen">
         <h1 className="text-2xl font-bold mb-4">Profil</h1>
+        <button onClick={() => navigate("/")} className="bg-blue-500 text-white px-4 py-2 rounded mr-2">Home</button>
         {editMode ? (
           <form onSubmit={handleSubmitProfile} className="space-y-4">
             <div>
@@ -216,19 +232,43 @@ export default function ProfilePage() {
       {/* Dashboard */}
       <div className="w-3/4 p-4">
         <h1 className="text-2xl font-bold mb-4">Tableau de Bord</h1>
-        {user.roles && user.roles.includes('Organisateur') && (
-          <button
-            onClick={() => setModalIsOpen(true)}
-            className="bg-purple-500 text-white py-2 px-4 rounded hover:bg-purple-600"
-          >
-            Créer un Événement
-          </button>
-        )}
+        <div className='w-1/4 flex justify-between'>
+            {user.roles && user.roles.includes('Organisateur') && (
+            <button
+                onClick={() => setEventModalIsOpen(true)}
+                className="bg-purple-500 text-white py-2 px-4 rounded hover:bg-purple-600"
+            >
+                Créer un Événement
+            </button>
+            )}
+
+            {user.roles && user.roles.includes('Redacteur') && (
+            <button
+                onClick={() => setArticleModalIsOpen(true)}
+                className="bg-purple-500 text-white py-2 px-4 rounded hover:bg-purple-600"
+            >
+                Créer un Article
+            </button>
+            )}
+        </div>
+
+        {user.roles && user.roles.includes('Organisateur') && <UserCreatedEvents refreshToggle={refreshToggle} />}
+
+        {/* User Inscriptions */}
+        <UserInscriptions user={user} />
 
         {/* Modal for event creation */}
         <CreateEventModal
-          isOpen={modalIsOpen}
-          onRequestClose={() => setModalIsOpen(false)}
+          isOpen={eventModalIsOpen}
+          onRequestClose={() => setEventModalIsOpen(false)}
+          user={user}
+          onEventCreated={handleEventCreated}
+        />
+
+        {/* Modal for article creation */}
+        <CreateArticleModal
+          isOpen={articleModalIsOpen}
+          onRequestClose={() => setArticleModalIsOpen(false)}
           user={user}
         />
       </div>
