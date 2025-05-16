@@ -8,10 +8,12 @@ export default function EventDetail() {
   const [avis, setAvis] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [playerId, setPlayerId] = useState('');
   const [deck, setDeck] = useState('');
   const [positif, setPositif] = useState(true);
   const [commentaire, setCommentaire] = useState('');
+  const [user, setUser] = useState(null);
+  const [isRegistered, setIsRegistered] = useState(false);
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -20,7 +22,6 @@ export default function EventDetail() {
         setEvent(eventResponse.data);
         setLoading(false);
 
-        // Fetch reviews related to the event
         const avisResponse = await axios.get(`http://localhost:8000/api/events/${id}/avis/`);
         setAvis(avisResponse.data);
       } catch (err) {
@@ -29,7 +30,36 @@ export default function EventDetail() {
       }
     };
 
+    const fetchUser = async () => {
+      try {
+        const token = localStorage.getItem("access_token");
+        const res = await axios.get("http://127.0.0.1:8000/api/get_user/", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setUser(res.data.user);
+      } catch (error) {
+        console.error("Erreur lors de la récupération de l'utilisateur :", error);
+      }
+    };
+
+    const checkRegistration = async () => {
+      try {
+        const token = localStorage.getItem("access_token");
+        const res = await axios.get(`http://localhost:8000/api/inscriptions/check/${id}/`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setIsRegistered(res.data.isRegistered);
+        if (res.data.isRegistered) {
+          setMessage('Vous êtes déjà inscrit à cet événement.');
+        }
+      } catch (error) {
+        console.error("Erreur lors de la vérification de l'inscription :", error);
+      }
+    };
+
+    fetchUser();
     fetchEvent();
+    checkRegistration();
   }, [id]);
 
   const formatDate = (dateString) => {
@@ -39,24 +69,34 @@ export default function EventDetail() {
 
   const handleInscriptionSubmit = async (e) => {
     e.preventDefault();
+    if (isRegistered) {
+      setMessage('Vous êtes déjà inscrit à cet événement.');
+      return;
+    }
+
     const formData = new FormData();
-    formData.append('event', id); // Use the event ID from the URL
-    formData.append('player', playerId);
+    formData.append('event', id);
+    formData.append('player', user.id);
     formData.append('deck', deck);
 
     try {
       const response = await axios.post('http://localhost:8000/api/inscriptions/', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          'X-CSRFToken': 'your_csrf_token_here' // Include CSRF token if needed
+          'X-CSRFToken': 'your_csrf_token_here'
         }
       });
       console.log('Inscription créée :', response.data);
+      setDeck('');
+      setMessage('Inscription réussie!');
+      setIsRegistered(true);
     } catch (error) {
       if (error.response) {
         console.error('Erreur:', error.response.data);
+        setMessage('Erreur lors de l\'inscription.');
       } else {
         console.error('Erreur inconnue:', error.message);
+        setMessage('Erreur inconnue lors de l\'inscription.');
       }
     }
   };
@@ -64,24 +104,29 @@ export default function EventDetail() {
   const handleAvisSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append('event', id); // Use the event ID from the URL
+    formData.append('event', id);
     formData.append('positif', positif);
     formData.append('commentaire', commentaire);
-    formData.append('author', 1); // temporairement en dur
+    formData.append('author', user.id);
 
     try {
       const response = await axios.post('http://localhost:8000/api/avis/', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          'X-CSRFToken': 'your_csrf_token_here' // Include CSRF token if needed
+          'X-CSRFToken': 'your_csrf_token_here'
         }
       });
       console.log('Avis créé :', response.data);
+      setCommentaire('');
+      setPositif(true);
+      setMessage('Avis soumis avec succès!');
     } catch (error) {
       if (error.response) {
         console.error('Erreur:', error.response.data);
+        setMessage('Erreur lors de la soumission de l\'avis.');
       } else {
         console.error('Erreur inconnue:', error.message);
+        setMessage('Erreur inconnue lors de la soumission de l\'avis.');
       }
     }
   };
@@ -118,67 +163,62 @@ export default function EventDetail() {
           ))}
         </div>
       </div>
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold mb-4">Create Avis</h2>
-        <form onSubmit={handleAvisSubmit} className="space-y-4">
-          <div>
-            <label className="block text-gray-700 mb-2">Positif</label>
-            <input
-              type="checkbox"
-              checked={positif}
-              onChange={(e) => setPositif(e.target.checked)}
-              className="mr-2"
-            />
-            <span>Positif</span>
+      {user ? (
+        <>
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <h2 className="text-2xl font-bold mb-4">Create Avis</h2>
+            <form onSubmit={handleAvisSubmit} className="space-y-4">
+              <div>
+                <label className="block text-gray-700 mb-2">Positif</label>
+                <input
+                  type="checkbox"
+                  checked={positif}
+                  onChange={(e) => setPositif(e.target.checked)}
+                  className="mr-2" />
+                <span>Positif</span>
+              </div>
+              <div>
+                <label className="block text-gray-700 mb-2">Commentaire</label>
+                <textarea
+                  value={commentaire}
+                  onChange={(e) => setCommentaire(e.target.value)}
+                  placeholder="Commentaire"
+                  className="w-full p-2 border rounded" />
+              </div>
+              <button
+                type="submit"
+                className="w-full bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
+              >
+                Soumettre l'avis
+              </button>
+            </form>
           </div>
-          <div>
-            <label className="block text-gray-700 mb-2">Commentaire</label>
-            <textarea
-              value={commentaire}
-              onChange={(e) => setCommentaire(e.target.value)}
-              placeholder="Commentaire"
-              className="w-full p-2 border rounded"
-            />
+
+          <div className="bg-white p-6 rounded-lg shadow-md mb-6">
+            <h2 className="text-2xl font-bold mb-4">Inscription</h2>
+            <form onSubmit={handleInscriptionSubmit} className="space-y-4">
+              <div>
+                <label className="block text-gray-700 mb-2">Deck URL</label>
+                <input
+                  type="url"
+                  value={deck}
+                  onChange={(e) => setDeck(e.target.value)}
+                  placeholder="Lien vers le deck"
+                  className="w-full p-2 border rounded" />
+              </div>
+              <button
+                type="submit"
+                disabled={isRegistered}
+                className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 disabled:bg-gray-400"
+              >
+                S'inscrire
+              </button>
+            </form>
           </div>
-          <button
-            type="submit"
-            className="w-full bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
-          >
-            Soumettre l'avis
-          </button>
-        </form>
-      </div>
-      <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-        <h2 className="text-2xl font-bold mb-4">Inscription</h2>
-        <form onSubmit={handleInscriptionSubmit} className="space-y-4">
-          <div>
-            <label className="block text-gray-700 mb-2">Player ID</label>
-            <input
-              type="number"
-              value={playerId}
-              onChange={(e) => setPlayerId(e.target.value)}
-              placeholder="ID du joueur"
-              className="w-full p-2 border rounded"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-700 mb-2">Deck URL</label>
-            <input
-              type="url"
-              value={deck}
-              onChange={(e) => setDeck(e.target.value)}
-              placeholder="Lien vers le deck"
-              className="w-full p-2 border rounded"
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
-          >
-            S'inscrire
-          </button>
-        </form>
-      </div>
+        </>
+      ) : null}
+
+      {message && <div className="text-center py-4 text-green-500">{message}</div>}
     </div>
   );
 }

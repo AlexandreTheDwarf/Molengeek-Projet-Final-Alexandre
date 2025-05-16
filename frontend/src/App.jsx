@@ -9,6 +9,7 @@ import ArticlesList from './pages/ArticlesList'
 import ArticleDetail from './pages/ArticleDetail'
 import EventsList from './pages/EventsList'
 import EventDetail from './pages/EventDetail'
+import ProfilePage from './pages/Profil'
 
 function App() {
     const [message, setMessage] = useState('')
@@ -19,6 +20,7 @@ function App() {
             <Routes>
                 <Route path="/register" element={<Register message={message} setMessage={setMessage} />} />
                 <Route path="/login" element={<Login message={message} setMessage={setMessage} />} />
+                <Route path="/profil" element={<ProfilePage />} />
                 <Route path="/" element={<Home user={user} setUser={setUser} setMessage={setMessage} message={message} />} />
 
                 <Route path="/articles/" element={<ArticlesList />} />

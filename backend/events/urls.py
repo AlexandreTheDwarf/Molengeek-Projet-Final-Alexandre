@@ -17,4 +17,6 @@ urlpatterns = [
 
     path('inscriptions/', InscriptionListCreateView.as_view(), name='inscriptionEvent-list-create'),
     path('inscriptions/<int:pk>/', InscriptionDetailView.as_view(), name='inscriptionEvent-detail'),
+
+    path('inscriptions/check/<int:event_id>/', CheckRegistrationView.as_view(), name='check_registration'),
 ]

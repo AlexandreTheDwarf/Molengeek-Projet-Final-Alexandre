@@ -1,7 +1,11 @@
 from rest_framework import generics
+from rest_framework.views import APIView
 from django.db.models import F
 from .models import Event, Article, AvisEvent, Inscription
 from .serializers import EventSerializer, ArticleSerializer, AvisEventSerializer, InscriptionSerializer
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 
 class EventListView(generics.ListAPIView):
     queryset = Event.objects.all()
@@ -80,3 +84,11 @@ class LatestArticlesListView(generics.ListAPIView):
 
     def get_queryset(self):
         return Article.objects.all().order_by('-date_creation')[:5]  # Get the 5 most recent articles
+
+class CheckRegistrationView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, event_id):
+        user = request.user
+        is_registered = Inscription.objects.filter(event_id=event_id, player=user).exists()
+        return Response({'isRegistered': is_registered}, status=status.HTTP_200_OK)

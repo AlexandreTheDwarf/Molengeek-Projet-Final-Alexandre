@@ -77,6 +77,7 @@ function Home({ setMessage }) {
         <div className="mb-4">
           <button onClick={() => navigate("/register")} className="bg-blue-500 text-white px-4 py-2 rounded mr-2">Inscription</button>
           <button onClick={() => navigate("/login")} className="bg-green-500 text-white px-4 py-2 rounded mr-2">Connexion</button>
+          <button onClick={() => navigate("/profil")} className="bg-green-500 text-white px-4 py-2 rounded mr-2">Profil</button>
           <button onClick={() => navigate("/articles/")} className="bg-purple-500 text-white px-4 py-2 rounded mr-2">All Articles</button>
           <button onClick={() => navigate("/article/create")} className="bg-indigo-500 text-white px-4 py-2 rounded mr-2">Create Article</button>
           <button onClick={() => navigate("/event/")} className="bg-yellow-500 text-white px-4 py-2 rounded mr-2">All Events</button>

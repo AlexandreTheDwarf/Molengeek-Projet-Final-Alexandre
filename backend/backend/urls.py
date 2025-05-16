@@ -26,6 +26,7 @@ urlpatterns = [
     path('api/login/', views.connexion, name='login'),
     path('api/logout/', views.deconnexion, name='logout'),
     path('api/get_user/', views.get_user, name='get_user'),
+    path('api/update_user/', views.update_user, name='update_user'),
 
     path('api/', include('events.urls')),
 ]
