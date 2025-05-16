@@ -38,4 +38,96 @@ Pour lancer le script de seed, exécute la commande suivante :
 python run_seed.py
 ```
 
+---
+
+## Description
+
+Ce projet est une plateforme web pour gérer des événements liés à Magic The Gathering, avec création d’articles, gestion des inscriptions, et plus encore.
+Backend Django REST API + frontend React.
+
+---
+
+## Fonctionnalités principales
+
+* Gestion des utilisateurs avec rôles (Organisateur, Rédacteur)
+* Création, modification, suppression d’événements
+* Inscription aux événements avec suivi des participants
+* Création, modification, suppression d’articles
+* Gestion des avis sur les événements
+* Interface utilisateur réactive avec modales pour création et édition
+* Authentification sécurisée via JWT
+
+---
+
+## Tech Stack
+
+* Backend : Django 5.2, Django REST Framework
+* Frontend : React (React Router, Axios, React Modal)
+* Authentification : JWT (JSON Web Tokens)
+* Base de données : SQLite / PostgreSQL (à configurer)
+* Stockage médias : dossier `backend/media` (non suivi par Git)
+
+---
+
+### Installation & Setup
+
+1. Crée et active ton environnement virtuel :
+
+```bash
+python -m venv env
+source env/bin/activate  # ou env\Scripts\activate sous Windows
+```
+
+2. Installe les dépendances :
+
+```bash
+pip install -r requirements.txt
+```
+
+3. **Patch django-seed** (important) :
+   Modifie le fichier `env/Lib/site-packages/django_seed/guessers.py` pour enlever l’argument `is_dst` de la fonction `make_aware` (voir plus haut).
+
+4. Lance les migrations, crée un super utilisateur et démarre le serveur :
+
+```bash
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py runserver
+```
+
+5. (Optionnel) Lance le script de seed pour remplir la base :
+
+```bash
+python run_seed.py
+```
+
+---
+
+## Usage
+
+* Accéder à l’interface frontend via [http://localhost:5173](http://localhost:5173)
+* Utiliser l’API REST à [http://localhost:8000/api/](http://localhost:8000/api/)
+* Créer un compte, se connecter
+* En fonction de vos rôles, accéder aux fonctionnalités d’organisation d’événements ou de rédaction d’articles
+
+---
+
+## Ajouts récents
+
+* Gestion fine des rôles utilisateurs (Organisateur, Rédacteur)
+* Modales React pour création et édition (événements et articles)
+* Filtrage avancé et vues personnalisées (events en early, last chance)
+* Dashboard profil personnalisé avec gestion des contenus créés
+* Sécurisation des endpoints avec permissions personnalisées
+
+---
+
+## À venir
+
+* Gestion avancée des inscriptions (validation, annulation, notifications)
+* Amélioration de l’UI/UX sur mobile
+* Tests unitaires et intégration continue
+
+
+
 

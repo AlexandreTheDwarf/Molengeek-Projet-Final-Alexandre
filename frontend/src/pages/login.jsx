@@ -64,6 +64,15 @@ function Login(props) {
                     >
                         Connexion
                     </button>
+                    <div className="text-center mt-4">
+                    <span className="text-sm text-gray-600">Pas encore inscrit·e ? </span>
+                    <button
+                        onClick={() => navigate("/register")}
+                        className="text-indigo-600 hover:underline font-medium"
+                    >
+                        Crée ton compte
+                    </button>
+                    </div>
                 </form>
             </div>
         </div>

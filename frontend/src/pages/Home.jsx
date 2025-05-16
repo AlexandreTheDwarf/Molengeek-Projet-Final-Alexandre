@@ -73,25 +73,26 @@ function Home({ setMessage }) {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-4">Homepage</h1>
-      {user ? (
-        <div className="mb-4">
-          <button onClick={() => navigate("/register")} className="bg-blue-500 text-white px-4 py-2 rounded mr-2">Inscription</button>
-          <button onClick={() => navigate("/login")} className="bg-green-500 text-white px-4 py-2 rounded mr-2">Connexion</button>
-          <button onClick={() => navigate("/profil")} className="bg-green-500 text-white px-4 py-2 rounded mr-2">Profil</button>
-          <button onClick={() => navigate("/articles/")} className="bg-purple-500 text-white px-4 py-2 rounded mr-2">All Articles</button>
-          <button onClick={() => navigate("/event/")} className="bg-yellow-500 text-white px-4 py-2 rounded mr-2">All Events</button>
-          <button onClick={logout} className="bg-red-500 text-white px-4 py-2 rounded">Logout</button>
-          <h2 className="text-xl font-semibold">Bienvenue {user.username} !</h2>
-          <p>ID utilisateur : {user.id}</p>
-        </div>
-      ) : (
-        <div className="mb-4">
-          <button onClick={() => navigate("/register")} className="bg-blue-500 text-white px-4 py-2 rounded mr-2">Inscription</button>
-          <button onClick={() => navigate("/login")} className="bg-green-500 text-white px-4 py-2 rounded mr-2">Connexion</button>
-          <button onClick={() => navigate("/articles/")} className="bg-purple-500 text-white px-4 py-2 rounded mr-2">All Articles</button>
-          <button onClick={() => navigate("/event/")} className="bg-yellow-500 text-white px-4 py-2 rounded mr-2">All Events</button>
-        </div>
+      <div className="mb-4 flex flex-wrap gap-2">
+      
+      <button onClick={() => navigate("/articles/")} className="bg-purple-500 text-white px-4 py-2 rounded">Articles</button>
+      <button onClick={() => navigate("/events/")} className="bg-yellow-500 text-white px-4 py-2 rounded">Événements</button>
+
+      {!user && (
+        <>
+          <button onClick={() => navigate("/login")} className="bg-green-500 text-white px-4 py-2 rounded">Connexion</button>
+        </>
       )}
+
+      {user && (
+        <>
+          <button onClick={() => navigate("/profil")} className="bg-indigo-500 text-white px-4 py-2 rounded">Profil</button>
+          <button onClick={logout} className="bg-red-500 text-white px-4 py-2 rounded">Déconnexion</button>
+          <h2 className="text-xl font-semibold w-full mt-2">Bienvenue {user.username} !</h2>
+          <p className="w-full">ID utilisateur : {user.id}</p>
+        </>
+      )}
+    </div>
 
       {/* Hero Section */}
       <section className="hero-section bg-gray-100 p-6 rounded-lg mb-6">

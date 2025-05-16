@@ -5,7 +5,8 @@ from .views import (
     ArticleListCreateView, ArticleDetailView, LatestArticlesListView,
     AvisEventListCreateView, EventAvisListView, AvisEventDetailView,
     InscriptionListCreateView, InscriptionDetailView,
-    CheckRegistrationView, GetUserInscriptionsView, GetUserCreatedEventsView
+    CheckRegistrationView, GetUserInscriptionsView, GetUserCreatedEventsView,
+    GetUserCreatedArticlesView
 )
 
 urlpatterns = [
@@ -28,5 +29,7 @@ urlpatterns = [
     path('inscriptions/check/<int:event_id>/', CheckRegistrationView.as_view(), name='check_registration'),
     path('get_user_inscriptions/', GetUserInscriptionsView.as_view(), name='get_user_inscriptions'),
     path('get_user_events/', GetUserCreatedEventsView.as_view(), name='get_user_events'),
+
+    path('get_user_articles/', GetUserCreatedArticlesView.as_view(), name='get_user_articles'),
 
 ]

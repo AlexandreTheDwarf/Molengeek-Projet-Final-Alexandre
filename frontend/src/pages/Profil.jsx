@@ -5,6 +5,7 @@ import CreateEventModal from '../components/CreateEventModal';
 import CreateArticleModal from '../components/CreateArticleModal';
 import UserInscriptions from '../components/UserInscriptions';
 import UserCreatedEvents from '../components/UserCreatedEvents';
+import UserCreatedArticles from '../components/UserCreatedArticles';
 import { useNavigate } from "react-router-dom";
 
 Modal.setAppElement('#root'); 
@@ -125,9 +126,14 @@ export default function ProfilePage() {
   };
 
   const [refreshToggle, setRefreshToggle] = useState(false);
+  const [refreshArticlesToggle, setRefreshArticlesToggle] = useState(false);
 
   const handleEventCreated = () => {
     setRefreshToggle(prev => !prev); // toggle force un effet useEffect
+  };
+
+  const handleArticleCreatedOrUpdated = () => {
+    setRefreshArticlesToggle(prev => !prev);
   };
 
   if (loading) return <div className="text-center py-4">Loading...</div>;
@@ -252,7 +258,9 @@ export default function ProfilePage() {
             )}
         </div>
 
-        {user.roles && user.roles.includes('Organisateur') && <UserCreatedEvents refreshToggle={refreshToggle} />}
+        {user.roles && user.roles.includes('Redacteur') && <UserCreatedArticles refreshToggle={refreshArticlesToggle} />}
+
+        {user.roles && user.roles.includes('Organisateur') && <UserCreatedEvents refreshToggle={refreshToggle} onArticleCreated={handleArticleCreatedOrUpdated}/>}
 
         {/* User Inscriptions */}
         <UserInscriptions user={user} />
@@ -270,6 +278,7 @@ export default function ProfilePage() {
           isOpen={articleModalIsOpen}
           onRequestClose={() => setArticleModalIsOpen(false)}
           user={user}
+          onArticleCreated={handleArticleCreatedOrUpdated}
         />
       </div>
 

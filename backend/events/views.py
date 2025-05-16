@@ -125,3 +125,15 @@ class GetUserCreatedEventsView(APIView):
             return Response(serializer.data)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class GetUserCreatedArticlesView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        try:
+            user = request.user
+            articles = Article.objects.filter(auteur=user).order_by('-date_creation')
+            serializer = ArticleSerializer(articles, many=True)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response({'error': str(e)}, status=500)

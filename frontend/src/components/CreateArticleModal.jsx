@@ -5,7 +5,7 @@ import axios from 'axios';
 
 Modal.setAppElement('#root');
 
-const CreateArticleModal = ({ isOpen, onRequestClose, user }) => {
+const CreateArticleModal = ({ isOpen, onRequestClose, user, onArticleCreated }) => {
   const [titre, setTitre] = useState('');
   const [categorie, setCategorie] = useState('news');
   const [contenu, setContenu] = useState('');
@@ -32,6 +32,7 @@ const CreateArticleModal = ({ isOpen, onRequestClose, user }) => {
       console.log('Article créé :', response.data);
       setMessage('Article créé avec succès!');
       onRequestClose();
+      onArticleCreated();
     } catch (error) {
       if (error.response) {
         console.error('Erreur:', error.response.data);
