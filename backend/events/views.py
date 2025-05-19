@@ -67,6 +67,24 @@ class InscriptionDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Inscription.objects.all()
     serializer_class = InscriptionSerializer
 
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)  # pour savoir si c'est un PATCH ou PUT
+        instance = self.get_object()
+
+        # Met à jour l'état uniquement si présent dans la requête
+        etat = request.data.get('etat')
+        if etat:
+            instance.etat = etat
+
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        # Recalcul du nombre de participants valides
+        instance.event.update_participant_count()
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 # Special views : 
 
 class EarlyEventsListView(generics.ListAPIView):
@@ -137,3 +155,17 @@ class GetUserCreatedArticlesView(APIView):
             return Response(serializer.data)
         except Exception as e:
             return Response({'error': str(e)}, status=500)
+        
+class GetInscriptionsForEventView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, event_id):
+        try:
+            event = Event.objects.get(pk=event_id, author=request.user)
+            inscriptions = Inscription.objects.filter(event=event)
+            serializer = InscriptionSerializer(inscriptions, many=True)
+            return Response(serializer.data)
+        except Event.DoesNotExist:
+            return Response({"error": "Événement introuvable ou non autorisé."}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

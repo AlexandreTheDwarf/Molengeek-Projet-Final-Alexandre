@@ -15,7 +15,5 @@ def ban_user_avis(sender, instance, **kwargs):
 
 @receiver(post_save, sender=Inscription)
 def update_participant_count(sender, instance, **kwargs):
-    if instance.etat == 'valide':
-        event = instance.event
-        event.nombre_participant += 1
-        event.save()
+    if instance.event:
+        instance.event.update_participant_count()

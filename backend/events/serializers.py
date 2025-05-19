@@ -1,17 +1,28 @@
 from rest_framework import serializers
 from .models import Event, Inscription, AvisEvent, Article
+from django.contrib.auth.models import User
 
-# serializers.py
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username']
 
 class EventLightSerializer(serializers.ModelSerializer):
+    nombre_participant = serializers.SerializerMethodField()
+    nombre_participant_max = serializers.IntegerField()
+
     class Meta:
         model = Event
-        fields = ['id', 'nom', 'date', 'lieux']
+        fields = ['id', 'nom', 'date', 'lieux', 'nombre_participant', 'nombre_participant_max']
+
+    def get_nombre_participant(self, obj):
+        return obj.inscriptions.filter(etat="valide").count()
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation['date'] = instance.date.isoformat() if instance.date else None
         return representation
+
 
 class EventSerializer(serializers.ModelSerializer):  # Version complète
     class Meta:
@@ -19,11 +30,12 @@ class EventSerializer(serializers.ModelSerializer):  # Version complète
         fields = '__all__'
 
 class InscriptionSerializer(serializers.ModelSerializer):
-    event = EventLightSerializer()  # 🧠 utilise la version light ici
+    event = EventLightSerializer()
+    player = UserSerializer()
 
     class Meta:
         model = Inscription
-        fields = ['id', 'event', 'deck', 'etat']
+        fields = ['id', 'event', 'player', 'deck', 'etat']
 
 class AvisEventSerializer(serializers.ModelSerializer):
     class Meta:
@@ -39,4 +51,3 @@ class ArticleSerializer(serializers.ModelSerializer):
         if value and value.size > 10 * 1024 * 1024:  # 10 MB max
             raise serializers.ValidationError("L'image est trop volumineuse.")
         return value
-

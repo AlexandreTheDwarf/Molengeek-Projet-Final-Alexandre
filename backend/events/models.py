@@ -38,6 +38,10 @@ class Event(models.Model):
     def clean(self):
         if self.IRL and not self.lieux:
             raise ValidationError("Un événement IRL doit obligatoirement avoir un lieu renseigné.")
+        
+    def update_participant_count(self):
+        self.nombre_participant = self.inscriptions.filter(etat='valide').count()
+        self.save()
 
 class Inscription(models.Model):
     ETAT_CHOICES = [
