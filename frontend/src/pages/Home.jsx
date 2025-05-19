@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import AOS from 'aos';
+import 'aos/dist/aos.css';
 
-// Fonction utilitaire pour formater la date
 const formatDate = (dateString) => {
   const options = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
   return new Date(dateString).toLocaleDateString(undefined, options);
@@ -16,6 +17,8 @@ function Home({ setMessage }) {
   const navigate = useNavigate();
 
   useEffect(() => {
+    AOS.init({ duration: 800, once: true });
+
     const fetchUser = async () => {
       try {
         const token = localStorage.getItem("access_token");
@@ -73,52 +76,39 @@ function Home({ setMessage }) {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-4">Homepage</h1>
-      <div className="mb-4 flex flex-wrap gap-2">
-      
-      <button onClick={() => navigate("/articles/")} className="bg-purple-500 text-white px-4 py-2 rounded">Articles</button>
-      <button onClick={() => navigate("/events/")} className="bg-yellow-500 text-white px-4 py-2 rounded">Événements</button>
-
-      {!user && (
-        <>
-          <button onClick={() => navigate("/login")} className="bg-green-500 text-white px-4 py-2 rounded">Connexion</button>
-        </>
-      )}
-
-      {user && (
-        <>
-          <button onClick={() => navigate("/profil")} className="bg-indigo-500 text-white px-4 py-2 rounded">Profil</button>
-          <button onClick={logout} className="bg-red-500 text-white px-4 py-2 rounded">Déconnexion</button>
-          <h2 className="text-xl font-semibold w-full mt-2">Bienvenue {user.username} !</h2>
-          <p className="w-full">ID utilisateur : {user.id}</p>
-        </>
-      )}
-    </div>
 
       {/* Hero Section */}
-      <section className="hero-section bg-gray-100 p-6 rounded-lg mb-6">
-        <h2 className="text-2xl font-bold mb-2">Welcome to Our Community</h2>
-        <p className="text-lg">Discover the latest events and articles from our community.</p>
+      <section
+        className="relative h-[400px] md:h-[500px] lg:h-[600px] flex items-center justify-center text-white text-center overflow-hidden rounded-lg mb-6"
+        data-aos="fade-down"
+      >
+        <img
+          src="https://source.unsplash.com/1600x900/?community,event"
+          alt="Hero"
+          className="absolute w-full h-full object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-black bg-opacity-50" />
+        <div className="relative z-10 p-4">
+          <h2 className="text-4xl md:text-5xl font-bold mb-4">Rejoins notre Communauté !</h2>
+          <p className="text-lg md:text-xl">Découvre des événements, partage ta passion et connecte-toi aux autres.</p>
+        </div>
       </section>
 
       {/* Early Events Section */}
-      <section className="mb-6">
+      <section className="mb-6" data-aos="fade-up">
         <h2 className="text-2xl font-bold mb-4">Early Events</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {earlyEvents.map(event => (
-            <div key={event.id} className="bg-white p-4 rounded-lg shadow-md">
+            <div key={event.id} className="bg-white p-4 rounded-lg shadow-md" data-aos="zoom-in">
               <img src={event.banner_img} alt={event.nom} className="w-full h-48 object-cover rounded mb-2" />
               <h3 className="text-xl font-semibold">{event.nom}</h3>
               <p>Date de l'event: {formatDate(event.date)}</p>
               <p>Participants : <span className={event.nombre_participant_max - event.nombre_participant <= 5 ? "text-red-600 font-bold" : ""}>{event.nombre_participant}/{event.nombre_participant_max}</span></p>              
               <p>Format: {event.format}</p>
-              {event.format === "commander" ? (
-                <p>Bracket: {event.bracket_level}</p>
-              ) : (
-                null
-              )}
+              {event.format === "commander" && <p>Bracket: {event.bracket_level}</p>}
               <button
                 onClick={() => navigate(`/events/${event.id}`)}
-                className="mt-2 bg-blue-500 text-white px-4 py-2 rounded"
+                className="mt-2 bg-blue-500 text-white px-4 py-2 rounded transition-transform duration-300 ease-in-out hover:scale-105"
               >
                 View Details
               </button>
@@ -128,24 +118,20 @@ function Home({ setMessage }) {
       </section>
 
       {/* Last Chance Events Section */}
-      <section className="mb-6">
+      <section className="mb-6" data-aos="fade-up">
         <h2 className="text-2xl font-bold mb-4">Last Chance Events</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {lastChanceEvents.map(event => (
-            <div key={event.id} className="bg-white p-4 rounded-lg shadow-md">
+            <div key={event.id} className="bg-white p-4 rounded-lg shadow-md" data-aos="zoom-in">
               <img src={event.banner_img} alt={event.nom} className="w-full h-48 object-cover rounded mb-2" />
               <h3 className="text-xl font-semibold">{event.nom}</h3>
               <p>Date de l'event: {formatDate(event.date)}</p>
               <p>Participants: <span className="text-red-600 font-bold">{event.nombre_participant}/{event.nombre_participant_max}</span></p>
               <p>Format: {event.format}</p>
-              {event.format === "commander" ? (
-                <p>Bracket Level : {event.bracket_level}</p>
-              ) : (
-                null
-              )}
+              {event.format === "commander" && <p>Bracket Level : {event.bracket_level}</p>}
               <button
                 onClick={() => navigate(`/events/${event.id}`)}
-                className="mt-2 bg-blue-500 text-white px-4 py-2 rounded"
+                className="mt-2 bg-blue-500 text-white px-4 py-2 rounded transition-transform duration-300 ease-in-out hover:scale-105"
               >
                 View Details
               </button>
@@ -155,17 +141,17 @@ function Home({ setMessage }) {
       </section>
 
       {/* Latest Articles Section */}
-      <section>
+      <section data-aos="fade-up">
         <h2 className="text-2xl font-bold mb-4">Latest Articles</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {latestArticles.map(article => (
-            <div key={article.id} className="bg-white p-4 rounded-lg shadow-md">
+            <div key={article.id} className="bg-white p-4 rounded-lg shadow-md" data-aos="zoom-in">
               <img src={article.image_banner} alt={article.titre} className="w-full h-48 object-cover object-top rounded mb-2" />
               <h3 className="text-xl font-semibold">{article.titre}</h3>
               <p>{article.categorie}</p>
               <button
                 onClick={() => navigate(`/articles/${article.id}`)}
-                className="mt-2 bg-blue-500 text-white px-4 py-2 rounded"
+                className="mt-2 bg-blue-500 text-white px-4 py-2 rounded transition-transform duration-300 ease-in-out hover:scale-105"
               >
                 View Details
               </button>

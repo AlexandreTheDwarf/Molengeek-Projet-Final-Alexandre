@@ -8,7 +8,7 @@ import UserCreatedEvents from '../components/UserCreatedEvents';
 import UserCreatedArticles from '../components/UserCreatedArticles';
 import { useNavigate } from "react-router-dom";
 
-Modal.setAppElement('#root'); 
+Modal.setAppElement('#root');
 
 export default function ProfilePage() {
   const [user, setUser] = useState(null);
@@ -141,11 +141,10 @@ export default function ProfilePage() {
   if (!user) return <div className="text-center py-4">No user found</div>;
 
   return (
-    <div className="flex justify-center">
+    <div className="flex flex-col md:flex-row">
       {/* Sidebar */}
-      <div className="w-1/4 bg-gray-100 p-4 h-screen">
+      <div className="w-full md:w-1/4 bg-gray-100 p-4">
         <h1 className="text-2xl font-bold mb-4">Profil</h1>
-        <button onClick={() => navigate("/")} className="bg-blue-500 text-white px-4 py-2 rounded mr-2">Home</button>
         {editMode ? (
           <form onSubmit={handleSubmitProfile} className="space-y-4">
             <div>
@@ -195,8 +194,9 @@ export default function ProfilePage() {
               Mettre à jour le profil
             </button>
           </form>
+          
         ) : (
-          <div className="max-w-md mx-auto bg-white shadow-lg rounded-xl p-6 flex flex-col items-center space-y-4 h-3/4">
+          <div className="max-w-md mx-auto bg-white shadow-lg rounded-xl p-6 flex flex-col items-center space-y-4">
             {/* Avatar dans un carré arrondi */}
             <div className="w-40 h-40 rounded-lg overflow-hidden border-4 border-gray-200">
                 <img
@@ -220,6 +220,7 @@ export default function ProfilePage() {
                 <p className="text-gray-700">
                 <span className="font-semibold">Nom :</span> {user.last_name}
                 </p>
+                {message && <div className="text-center py-4 text-green-500">{message}</div>}
             </div>
 
             {/* Bouton en bas */}
@@ -236,9 +237,9 @@ export default function ProfilePage() {
       </div>
 
       {/* Dashboard */}
-      <div className="w-3/4 p-4">
+      <div className="w-full md:w-3/4 p-4">
         <h1 className="text-2xl font-bold mb-4">Tableau de Bord</h1>
-        <div className='w-1/4 flex justify-between'>
+        <div className='flex flex-wrap gap-4 mb-4'>
             {user.roles && user.roles.includes('Organisateur') && (
             <button
                 onClick={() => setEventModalIsOpen(true)}
@@ -260,7 +261,7 @@ export default function ProfilePage() {
 
         {user.roles && user.roles.includes('Redacteur') && <UserCreatedArticles refreshToggle={refreshArticlesToggle} />}
 
-        {user.roles && user.roles.includes('Organisateur') && <UserCreatedEvents refreshToggle={refreshToggle} onArticleCreated={handleArticleCreatedOrUpdated}/>}
+        {user.roles && user.roles.includes('Organisateur') && <UserCreatedEvents refreshToggle={refreshToggle} onArticleCreated={handleArticleCreatedOrUpdated} user={user}/>}
 
         {/* User Inscriptions */}
         <UserInscriptions user={user} />
@@ -282,7 +283,6 @@ export default function ProfilePage() {
         />
       </div>
 
-      {message && <div className="text-center py-4 text-green-500">{message}</div>}
     </div>
   );
 }

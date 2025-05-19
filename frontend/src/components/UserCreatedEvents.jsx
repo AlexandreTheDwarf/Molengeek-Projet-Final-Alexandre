@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import EditEventModal from '../components/EditEventModal';
+import ManageInscriptionsModal from '../components/ManageInscriptionsModal';
 
 const UserCreatedEvents = ({ refreshToggle }) => {
   const [events, setEvents] = useState([]);
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [editModalOpen, setEditModalOpen] = useState(false);
+  const [manageModalOpen, setManageModalOpen] = useState(false);
+  const [selectedEventId, setSelectedEventId] = useState(null);
 
   const fetchEvents = async () => {
     try {
@@ -29,9 +32,18 @@ const UserCreatedEvents = ({ refreshToggle }) => {
     setEditModalOpen(true);
   };
 
+  const openManageModal = (eventId) => {
+    setSelectedEventId(eventId);
+    setManageModalOpen(true);
+  };
+
   const handleUpdated = () => {
     fetchEvents();
     setEditModalOpen(false);
+  };
+
+  const handleInscriptionsUpdated = () => {
+    fetchEvents(); // recharge les événements avec les nouvelles données
   };
 
   const handleDelete = async (eventId) => {
@@ -64,26 +76,47 @@ const UserCreatedEvents = ({ refreshToggle }) => {
             <span className="font-semibold">Date :</span>{' '}
             {new Date(event.date).toLocaleDateString()}
           </p>
+          <p className="text-gray-700">
+            <span className="font-semibold">Inscriptions :</span>{' '}
+            {event.nombre_participant} / {event.nombre_participant_max}
+          </p>
           <div className="flex gap-2 mt-2">
-            <button onClick={() => openEditModal(event)} className="bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-500">
+            <button
+              onClick={() => openEditModal(event)}
+              className="bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-500"
+            >
               ✏️ Modifier
             </button>
             <button
-              className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
               onClick={() => handleDelete(event.id)}
+              className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
             >
               🗑 Supprimer
+            </button>
+            <button
+              onClick={() => openManageModal(event.id)}
+              className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
+            >
+              👥 Gérer les inscriptions
             </button>
           </div>
         </div>
       ))}
 
-      {/* Modale d'édition */}
+      {/* Modale d'édition d'événement */}
       <EditEventModal
         isOpen={editModalOpen}
         onRequestClose={() => setEditModalOpen(false)}
         event={selectedEvent}
         onUpdated={handleUpdated}
+      />
+
+      {/* Modale de gestion des inscriptions */}
+      <ManageInscriptionsModal
+        isOpen={manageModalOpen}
+        onRequestClose={() => setManageModalOpen(false)}
+        eventId={selectedEventId}
+        onInscriptionsUpdated={handleInscriptionsUpdated}
       />
     </div>
   );
