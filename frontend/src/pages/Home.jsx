@@ -9,6 +9,19 @@ const formatDate = (dateString) => {
   return new Date(dateString).toLocaleDateString(undefined, options);
 };
 
+const filterEventsByDate = (events) => {
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()); // Début de la journée actuelle
+
+  return events.filter(event => {
+    const eventDate = new Date(event.date);
+    const eventDay = new Date(eventDate.getFullYear(), eventDate.getMonth(), eventDate.getDate());
+
+    // Inclure les événements qui se déroulent aujourd'hui ou dans le futur
+    return eventDay >= today;
+  });
+};
+
 function Home({ setMessage }) {
   const [user, setUser] = useState(null);
   const [earlyEvents, setEarlyEvents] = useState([]);
@@ -34,7 +47,8 @@ function Home({ setMessage }) {
     const fetchEarlyEvents = async () => {
       try {
         const res = await axios.get("http://127.0.0.1:8000/api/events/early/");
-        setEarlyEvents(res.data);
+        const filteredEvents = filterEventsByDate(res.data);
+        setEarlyEvents(filteredEvents);
       } catch (error) {
         console.error("Erreur lors de la récupération des early events :", error);
       }
@@ -43,7 +57,8 @@ function Home({ setMessage }) {
     const fetchLastChanceEvents = async () => {
       try {
         const res = await axios.get("http://127.0.0.1:8000/api/events/last-chance/");
-        setLastChanceEvents(res.data);
+        const filteredEvents = filterEventsByDate(res.data);
+        setLastChanceEvents(filteredEvents);
       } catch (error) {
         console.error("Erreur lors de la récupération des last chance events :", error);
       }
@@ -103,7 +118,7 @@ function Home({ setMessage }) {
               <img src={event.banner_img} alt={event.nom} className="w-full h-48 object-cover rounded mb-2" />
               <h3 className="text-xl font-semibold">{event.nom}</h3>
               <p>Date de l'event: {formatDate(event.date)}</p>
-              <p>Participants : <span className={event.nombre_participant_max - event.nombre_participant <= 5 ? "text-red-600 font-bold" : ""}>{event.nombre_participant}/{event.nombre_participant_max}</span></p>              
+              <p>Participants : <span className={event.nombre_participant_max - event.nombre_participant <= 5 ? "text-red-600 font-bold" : ""}>{event.nombre_participant}/{event.nombre_participant_max}</span></p>
               <p>Format: {event.format}</p>
               {event.format === "commander" && <p>Bracket: {event.bracket_level}</p>}
               <button

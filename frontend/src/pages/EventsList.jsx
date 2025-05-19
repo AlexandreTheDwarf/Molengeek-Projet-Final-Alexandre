@@ -20,6 +20,7 @@ export default function EventsList() {
     const fetchEvents = async () => {
       try {
         const response = await axios.get('http://localhost:8000/api/events/');
+        console.log('Events from API:', response.data); // Log des données reçues
         setEvents(response.data);
         setLoading(false);
       } catch (err) {
@@ -43,8 +44,10 @@ export default function EventsList() {
 
       return isDateValid && isLocationValid;
     });
+    console.log('Filtered events:', filtered); // Log des événements filtrés
     setFilteredEvents(filtered);
   }, [events, locationFilter]);
+
 
   const handleEventClick = (eventId) => {
     navigate(`/events/${eventId}`);
