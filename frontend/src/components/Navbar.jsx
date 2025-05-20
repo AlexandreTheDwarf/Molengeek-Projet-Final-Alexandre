@@ -19,7 +19,6 @@ const Navbar = () => {
         console.error("Erreur récupération user dans Navbar :", err)
       }
     }
-
     fetchUser()
   }, [])
 
@@ -35,33 +34,55 @@ const Navbar = () => {
   }
 
   return (
-    <nav className="bg-white shadow-md p-4 mb-4">
-      <div className="container mx-auto flex flex-wrap gap-2 items-center justify-between">
-        <div onClick={() => navigate("/")} className="cursor-pointer font-bold text-xl text-purple-700 hover:text-purple-900 transition">
+    <nav className="bg-mana-black text-mana-white font-magic shadow-magic px-6 py-4 mb-6">
+      <div className="container mx-auto flex flex-wrap items-center justify-between">
+        <div
+          onClick={() => navigate("/")}
+          className="cursor-pointer text-2xl font-bold text-mana-gold hover:text-mana-white transition-colors duration-300 select-none"
+          title="Retour à l'accueil"
+        >
           🧙‍♂️ EventMaster
         </div>
 
-        <div className="flex flex-wrap gap-2">
-          <button onClick={() => navigate("/")} className="bg-blue-500 text-white px-4 py-2 rounded transition-transform duration-300 ease-in-out hover:scale-105">
-            Acceuil
+        <div className="flex flex-wrap gap-3">
+          <button
+            onClick={() => navigate("/")}
+            className="bg-mana-blue hover:bg-mana-gold text-mana-white px-5 py-2 rounded shadow-inner transition-all duration-300 font-semibold"
+          >
+            Accueil
           </button>
-          <button onClick={() => navigate("/articles/")} className="bg-purple-500 text-white px-4 py-2 rounded transition-transform duration-300 ease-in-out hover:scale-105">
+          <button
+            onClick={() => navigate("/articles/")}
+            className="bg-mana-green hover:bg-mana-gold text-mana-white px-5 py-2 rounded shadow-inner transition-all duration-300 font-semibold"
+          >
             Articles
           </button>
-          <button onClick={() => navigate("/events/")} className="bg-yellow-500 text-white px-4 py-2 rounded transition-transform duration-300 ease-in-out hover:scale-105">
+          <button
+            onClick={() => navigate("/events/")}
+            className="bg-mana-red hover:bg-mana-gold text-mana-white px-5 py-2 rounded shadow-inner transition-all duration-300 font-semibold"
+          >
             Événements
           </button>
 
           {!user ? (
-            <button onClick={() => navigate("/login")} className="bg-green-500 text-white px-4 py-2 rounded transition-transform duration-300 ease-in-out hover:scale-105">
+            <button
+              onClick={() => navigate("/login")}
+              className="bg-mana-gold hover:bg-mana-blue text-mana-black px-5 py-2 rounded shadow-inner transition-all duration-300 font-semibold"
+            >
               Connexion
             </button>
           ) : (
             <>
-              <button onClick={() => navigate("/profil")} className="bg-indigo-500 text-white px-4 py-2 rounded transition-transform duration-300 ease-in-out hover:scale-105">
+              <button
+                onClick={() => navigate("/profil")}
+                className="bg-mana-purple hover:bg-mana-gold text-mana-white px-5 py-2 rounded shadow-inner transition-all duration-300 font-semibold"
+              >
                 Profil
               </button>
-              <button onClick={logout} className="bg-red-500 text-white px-4 py-2 rounded transition-transform duration-300 ease-in-out hover:scale-105">
+              <button
+                onClick={logout}
+                className="bg-mana-gold hover:bg-mana-black text-mana-white px-5 py-2 rounded shadow-inner transition-all duration-300 font-semibold"
+              >
                 Déconnexion
               </button>
             </>
@@ -70,10 +91,8 @@ const Navbar = () => {
       </div>
 
       {user && (
-        <div className="container mx-auto mt-2 text-sm text-gray-700">
-          <p>
-            Bienvenue <span className="font-semibold">{user.username}</span> !
-          </p>
+        <div className="container mx-auto mt-3 text-mana-gold text-sm font-semibold select-none">
+          Bienvenue <span>{user.username}</span> !
         </div>
       )}
     </nav>

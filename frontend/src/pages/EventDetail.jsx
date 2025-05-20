@@ -74,6 +74,11 @@ export default function EventDetail() {
       return;
     }
 
+    if (event.nombre_participant >= event.nombre_participant_max) {
+      setMessage("Désolé, l'événement est complet.");
+      return;
+    }
+
     const formData = new FormData();
     formData.append('event', id);
     formData.append('player', user.id);
@@ -91,13 +96,8 @@ export default function EventDetail() {
       setMessage('Inscription réussie!');
       setIsRegistered(true);
     } catch (error) {
-      if (error.response) {
-        console.error('Erreur:', error.response.data);
-        setMessage('Erreur lors de l\'inscription.');
-      } else {
-        console.error('Erreur inconnue:', error.message);
-        setMessage('Erreur inconnue lors de l\'inscription.');
-      }
+      console.error('Erreur:', error.response?.data || error.message);
+      setMessage('Erreur lors de l\'inscription.');
     }
   };
 
@@ -121,104 +121,110 @@ export default function EventDetail() {
       setPositif(true);
       setMessage('Avis soumis avec succès!');
     } catch (error) {
-      if (error.response) {
-        console.error('Erreur:', error.response.data);
-        setMessage('Erreur lors de la soumission de l\'avis.');
-      } else {
-        console.error('Erreur inconnue:', error.message);
-        setMessage('Erreur inconnue lors de la soumission de l\'avis.');
-      }
+      console.error('Erreur:', error.response?.data || error.message);
+      setMessage('Erreur lors de la soumission de l\'avis.');
     }
   };
 
-  if (loading) return <div className="text-center py-4">Loading...</div>;
-  if (error) return <div className="text-center py-4 text-red-500">Error: {error}</div>;
-  if (!event) return <div className="text-center py-4">No event found</div>;
+  if (loading) return <div className="text-center py-4">Chargement...</div>;
+  if (error) return <div className="text-center py-4 text-red-500">Erreur : {error}</div>;
+  if (!event) return <div className="text-center py-4">Événement introuvable</div>;
 
   return (
     <div className="container mx-auto p-4">
-      <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-        <h1 className="text-3xl font-bold mb-4">{event.nom}</h1>
-        <img src={event.banner_img} alt={event.nom} className="w-full h-64 object-cover rounded mb-4" />
+      <div className="bg-mana-white text-mana-black border border-mana-gold shadow-magic p-6 rounded-lg mb-6">
+        <h1 className="text-3xl font-bold font-magic text-mana-gold mb-4">{event.nom}</h1>
+        <img src={event.banner_img} alt={event.nom} className="w-full h-64 object-cover rounded mb-4 border border-mana-gold" />
         <p className="text-lg mb-2">{event.description}</p>
-        <p className="text-gray-700 mb-2"><span className="font-semibold">Author:</span> {event.author}</p>
-        <p className="text-gray-700 mb-2"><span className="font-semibold">Bracket Level:</span> {event.bracket_level}</p>
-        <p className="text-gray-700 mb-2"><span className="font-semibold">Format:</span> {event.format}</p>
-        <p className="text-gray-700 mb-2"><span className="font-semibold">Number of Participants:</span> {event.nombre_participant}</p>
-        <p className="text-gray-700 mb-2"><span className="font-semibold">Date:</span> {formatDate(event.date)}</p>
-        <p className="text-gray-700 mb-2"><span className="font-semibold">IRL:</span> {event.IRL ? 'Yes' : 'No'}</p>
-        <p className="text-gray-700 mb-4"><span className="font-semibold">Location:</span> {event.lieux}</p>
+        <p className="text-mana-purple"><span className="font-magic font-semibold">Auteur:</span> {event.author.username}</p>
+        <p className="text-mana-purple"><span className="font-magic font-semibold">Format:</span> {event.format}</p>
+        {event.format == "commander" ? <p className="text-mana-purple"><span className="font-magic font-semibold">Bracket:</span> {event.bracket_level}</p> : ''}
+        <p className="text-mana-purple"><span className="font-magic font-semibold">Participants:</span> {event.nombre_participant} / {event.nombre_participant_max}</p>
+        <p className="text-mana-purple"><span className="font-magic font-semibold">Date:</span> {formatDate(event.date)}</p>
+        <p className="text-mana-purple"><span className="font-magic font-semibold">{event.IRL ? 'IRL' : 'En Ligne'}</span> {event.IRL ? 'Oui' : ''}</p>
+        {event.IRL ? '<p className="text-mana-purple"><span className="font-magic font-semibold">Lieu:</span> {event.lieux}</p>' : ''}
       </div>
 
-      <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-        <h2 className="text-2xl font-bold mb-4">Reviews</h2>
+      <div className="bg-mana-white border border-mana-gold shadow-magic p-6 rounded-lg mb-6">
+        <h2 className="text-2xl font-bold font-magic text-mana-gold mb-4">Avis</h2>
         <div className="space-y-4">
-          {avis.map(avi => (
-            <div key={avi.id} className="p-4 border rounded-lg">
-              <p className="text-gray-700 mb-1"><span className="font-semibold">Author:</span> {avi.author}</p>
-              <p className="text-gray-700 mb-1"><span className="font-semibold">Positive:</span> {avi.positif ? 'Yes' : 'No'}</p>
-              <p className="text-gray-700 mb-1"><span className="font-semibold">Comment:</span> {avi.commentaire}</p>
-              <p className="text-gray-700"><span className="font-semibold">Date Posted:</span> {formatDate(avi.date_poste)}</p>
-            </div>
-          ))}
+          {avis.length === 0 ? (
+            <p className="text-center text-mana-purple font-magic italic">Pas d'avis, soyez le premier à en laisser un !</p>
+          ) : (
+            avis.map(avi => (
+              <div key={avi.id} className="p-4 border border-mana-gold rounded-lg">
+                <p className="text-mana-purple"><span className="font-magic">Auteur:</span> {avi.author}</p>
+                <p className="text-mana-purple"><span className="font-magic">Note:</span> {avi.positif ? 'Positif' : 'Négatif'}</p>
+                <p className="text-mana-purple"><span className="font-magic">Commentaire:</span> {avi.commentaire}</p>
+                <p className="text-mana-purple"><span className="font-magic">Posté le:</span> {formatDate(avi.date_poste)}</p>
+              </div>
+            ))
+          )}
         </div>
       </div>
-      {user ? (
+
+      {user && (
         <>
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h2 className="text-2xl font-bold mb-4">Create Avis</h2>
+          <div className="bg-mana-white border border-mana-gold shadow-magic p-6 rounded-lg mb-6">
+            <h2 className="text-2xl font-bold font-magic text-mana-gold mb-4">Donner un avis</h2>
             <form onSubmit={handleAvisSubmit} className="space-y-4">
-              <div>
-                <label className="block text-gray-700 mb-2">Positif</label>
+              <label className="text-mana-purple font-magic">
                 <input
                   type="checkbox"
                   checked={positif}
                   onChange={(e) => setPositif(e.target.checked)}
-                  className="mr-2" />
-                <span>Positif</span>
-              </div>
-              <div>
-                <label className="block text-gray-700 mb-2">Commentaire</label>
-                <textarea
-                  value={commentaire}
-                  onChange={(e) => setCommentaire(e.target.value)}
-                  placeholder="Commentaire"
-                  className="w-full p-2 border rounded" />
-              </div>
+                  className="mr-2"
+                />
+                Avis positif ?
+              </label>
+              <textarea
+                value={commentaire}
+                onChange={(e) => setCommentaire(e.target.value)}
+                placeholder="Votre commentaire..."
+                className="w-full p-2 border border-mana-gold rounded text-mana-black"
+              />
               <button
                 type="submit"
-                className="w-full bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
+                className="bg-mana-gold text-mana-black font-magic px-4 py-2 rounded shadow-magic hover:bg-mana-purple hover:text-mana-white transition"
               >
                 Soumettre l'avis
               </button>
             </form>
           </div>
 
-          <div className="bg-white p-6 rounded-lg shadow-md mb-6">
-            <h2 className="text-2xl font-bold mb-4">Inscription</h2>
-            <form onSubmit={handleInscriptionSubmit} className="space-y-4">
-              <div>
-                <label className="block text-gray-700 mb-2">Deck URL</label>
-                <input
-                  type="url"
-                  value={deck}
-                  onChange={(e) => setDeck(e.target.value)}
-                  placeholder="Lien vers le deck"
-                  className="w-full p-2 border rounded" />
-              </div>
-              <button
-                type="submit"
-                disabled={isRegistered}
-                className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 disabled:bg-gray-400"
-              >
-                S'inscrire
-              </button>
-            </form>
+          <div className="bg-mana-white border border-mana-gold shadow-magic p-6 rounded-lg mb-6">
+            <h2 className="text-2xl font-bold font-magic text-mana-gold mb-4">Inscription</h2>
+
+            {event.nombre_participant >= event.nombre_participant_max || isRegistered ? (
+              message && (
+                <div className="text-center text-mana-gold bg-mana-black rounded font-magic py-4 mt-4">
+                  {message}
+                </div>
+              )
+            ) : (
+              <form onSubmit={handleInscriptionSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-mana-purple font-magic mb-2">Lien vers votre deck</label>
+                  <input
+                    type="url"
+                    value={deck}
+                    onChange={(e) => setDeck(e.target.value)}
+                    placeholder="URL du deck"
+                    className="w-full p-2 border border-mana-gold rounded text-mana-black"
+                    required
+                  />
+                </div>
+                <button
+                  type="submit"
+                  className="bg-mana-gold text-mana-black font-magic px-4 py-2 rounded shadow-magic hover:bg-mana-purple hover:text-mana-white transition"
+                >
+                  S'inscrire
+                </button>
+              </form>
+            )}
           </div>
         </>
-      ) : null}
-
-      {message && <div className="text-center py-4 text-green-500">{message}</div>}
+      )}
     </div>
   );
 }

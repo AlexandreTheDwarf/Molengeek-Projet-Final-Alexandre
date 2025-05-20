@@ -10,6 +10,8 @@ class Event(models.Model):
         ('commander', 'Commander'),
         ('modern', 'Modern'),
         ('standard', 'Standard'),
+        ('draft', 'Draft'),
+        ('sealed', 'Sealed'),
     ]
 
     BRACKET_CHOICES = [

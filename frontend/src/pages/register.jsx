@@ -19,15 +19,13 @@ function Register(props) {
     const inscription = async (e) => {
         e.preventDefault();
 
-        // Check if passwords match
         if (formData.password !== formData.confirmPassword) {
-            setError("Passwords do not match.");
+            setError("Les mots de passe ne correspondent pas.");
             return;
         }
 
         try {
             const response = await axios.post("http://127.0.0.1:8000/api/register/", formData);
-            console.log(response.data);
             if (response.data.status === 'success') {
                 props.setMessage(response.data.message);
                 navigate('/');
@@ -35,8 +33,8 @@ function Register(props) {
                 props.setMessage(response.data.message);
             }
         } catch (error) {
-            console.error("There was an error registering the user:", error);
-            props.setMessage("An error occurred during registration.");
+            console.error("Erreur lors de l'inscription :", error);
+            props.setMessage("Une erreur est survenue pendant l'inscription.");
         }
     };
 
@@ -46,74 +44,78 @@ function Register(props) {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100">
-            <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
-                {props.message.length > 0 ? <p className="mb-4 text-center text-green-500">{props.message}</p> : null}
-                {error.length > 0 ? <p className="mb-4 text-center text-red-500">{error}</p> : null}
-                <form onSubmit={inscription} className="space-y-4">
+        <div className="flex items-center justify-center min-h-screen bg-mana-black font-magic">
+            <div className="bg-mana-gold p-8 rounded-lg shadow-magic w-full max-w-md text-mana-white">
+                {props.message.length > 0 && (
+                    <p className="mb-4 text-center text-mana-gold font-semibold">{props.message}</p>
+                )}
+                {error.length > 0 && (
+                    <p className="mb-4 text-center text-mana-red font-semibold">{error}</p>
+                )}
+                <form onSubmit={inscription} className="space-y-5">
                     <div>
-                        <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
+                        <label htmlFor="username" className="block mb-1 font-semibold">Username</label>
                         <input
                             type="text"
                             name="username"
                             value={formData.username}
                             onChange={change}
-                            className="w-full px-3 py-2 mt-1 border rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                            className="w-full px-4 py-2 rounded bg-mana-black border border-mana-gold focus:outline-none focus:ring-2 focus:ring-mana-gold text-mana-white"
                         />
                     </div>
                     <div>
-                        <label htmlFor="lastname" className="block text-sm font-medium text-gray-700">Last Name</label>
+                        <label htmlFor="lastname" className="block mb-1 font-semibold">Last Name</label>
                         <input
                             type="text"
                             name="lastname"
                             value={formData.lastname}
                             onChange={change}
-                            className="w-full px-3 py-2 mt-1 border rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                            className="w-full px-4 py-2 rounded bg-mana-black border border-mana-gold focus:outline-none focus:ring-2 focus:ring-mana-gold text-mana-white"
                         />
                     </div>
                     <div>
-                        <label htmlFor="firstname" className="block text-sm font-medium text-gray-700">First Name</label>
+                        <label htmlFor="firstname" className="block mb-1 font-semibold">First Name</label>
                         <input
                             type="text"
                             name="firstname"
                             value={formData.firstname}
                             onChange={change}
-                            className="w-full px-3 py-2 mt-1 border rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                            className="w-full px-4 py-2 rounded bg-mana-black border border-mana-gold focus:outline-none focus:ring-2 focus:ring-mana-gold text-mana-white"
                         />
                     </div>
                     <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+                        <label htmlFor="email" className="block mb-1 font-semibold">Email</label>
                         <input
                             type="email"
                             name="email"
                             value={formData.email}
                             onChange={change}
-                            className="w-full px-3 py-2 mt-1 border rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                            className="w-full px-4 py-2 rounded bg-mana-black border border-mana-gold focus:outline-none focus:ring-2 focus:ring-mana-gold text-mana-white"
                         />
                     </div>
                     <div>
-                        <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+                        <label htmlFor="password" className="block mb-1 font-semibold">Password</label>
                         <input
                             type="password"
                             name="password"
                             value={formData.password}
                             onChange={change}
-                            className="w-full px-3 py-2 mt-1 border rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                            className="w-full px-4 py-2 rounded bg-mana-black border border-mana-gold focus:outline-none focus:ring-2 focus:ring-mana-gold text-mana-white"
                         />
                     </div>
                     <div>
-                        <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">Confirm Password</label>
+                        <label htmlFor="confirmPassword" className="block mb-1 font-semibold">Confirm Password</label>
                         <input
                             type="password"
                             name="confirmPassword"
                             value={formData.confirmPassword}
                             onChange={change}
-                            className="w-full px-3 py-2 mt-1 border rounded-lg shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+                            className="w-full px-4 py-2 rounded bg-mana-black border border-mana-gold focus:outline-none focus:ring-2 focus:ring-mana-gold text-mana-white"
                         />
                     </div>
                     <button
                         type="submit"
-                        className="w-full px-4 py-2 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-opacity-50"
+                        className="w-full py-3 bg-mana-green text-mana-black font-bold rounded hover:bg-mana-white transition-colors duration-300"
                     >
                         Inscription
                     </button>

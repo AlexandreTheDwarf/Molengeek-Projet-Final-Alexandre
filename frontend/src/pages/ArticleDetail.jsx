@@ -12,7 +12,6 @@ export default function ArticleDetail() {
     const fetchArticle = async () => {
       try {
         const response = await axios.get(`http://localhost:8000/api/articles/${id}/`);
-        console.log('Fetched article:', response.data); // Log the article
         setArticle(response.data);
         setLoading(false);
       } catch (err) {
@@ -29,21 +28,27 @@ export default function ArticleDetail() {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
-  if (loading) return <div className="text-center py-4">Loading...</div>;
-  if (error) return <div className="text-center py-4 text-red-500">Error: {error}</div>;
-  if (!article) return <div className="text-center py-4">No article found</div>;
+  if (loading) return <div className="text-center py-4 text-mana-blue">Chargement du grimoire...</div>;
+  if (error) return <div className="text-center py-4 text-red-500">Erreur : {error}</div>;
+  if (!article) return <div className="text-center py-4">Aucun article trouvé</div>;
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="bg-white p-6 rounded-lg shadow-md">
-        <h1 className="text-3xl font-bold mb-4">{article.titre}</h1>
-        <img src={article.image_banner} alt={article.titre} className="w-full h-128 object-cover rounded mb-4" />
-        <div className='flex w-full justify-between'>
-          <p className="text-gray-700 mb-2"><span className="font-semibold">Category:</span> {article.categorie}</p>
-          <p className="text-gray-700 mb-2"><span className="font-semibold">Author:</span> {article.auteur}</p>
-          <p className="text-gray-700"><span className="font-semibold">Created at:</span> {formatDate(article.date_creation)}</p>
+    <div className="container mx-auto p-6 font-magic text-mana-black">
+      <div className="bg-mana-white border-4 border-mana-gold shadow-magic rounded-xl p-8 transition-transform duration-300 hover:scale-[1.01]">
+        <h1 className="text-4xl font-bold text-mana-gold mb-6">{article.titre}</h1>
+        <img
+          src={article.image_banner}
+          alt={article.titre}
+          className="w-full h-96 object-cover rounded shadow-lg mb-6 border border-mana-gold"
+        />
+        <div className="flex flex-col md:flex-row md:justify-between text-sm mb-4 text-mana-black/80">
+          <p><span className="font-semibold text-mana-gold">Catégorie :</span> {article.categorie}</p>
+          <p><span className="font-semibold text-mana-gold">Auteur :</span> {article.auteur.username}</p>
+          <p><span className="font-semibold text-mana-gold">Publié le :</span> {formatDate(article.date_creation)}</p>
         </div>
-        <p className="text-lg mb-4">{article.contenu}</p>
+        <div className="prose prose-lg prose-mana max-w-none text-mana-black">
+          <p>{article.contenu}</p>
+        </div>
       </div>
     </div>
   );

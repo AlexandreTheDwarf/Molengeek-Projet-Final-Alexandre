@@ -24,7 +24,9 @@ class EventLightSerializer(serializers.ModelSerializer):
         return representation
 
 
-class EventSerializer(serializers.ModelSerializer):  # Version complète
+class EventSerializer(serializers.ModelSerializer):
+    author = UserSerializer(read_only=True)
+    
     class Meta:
         model = Event
         fields = '__all__'
@@ -43,11 +45,14 @@ class AvisEventSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class ArticleSerializer(serializers.ModelSerializer):
+    auteur = UserSerializer(read_only=True)
+
     class Meta:
         model = Article
         fields = ['id', 'titre', 'categorie', 'contenu', 'image_banner', 'auteur', 'date_creation']
 
     def validate_image_banner(self, value):
-        if value and value.size > 10 * 1024 * 1024:  # 10 MB max
+        if value and value.size > 10 * 1024 * 1024:
             raise serializers.ValidationError("L'image est trop volumineuse.")
         return value
+
