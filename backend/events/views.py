@@ -34,7 +34,15 @@ class ArticleListView(generics.ListAPIView):
 
 class ArticleListCreateView(generics.ListCreateAPIView):
     queryset = Article.objects.all()
-    serializer_class = ArticleSerializer 
+    serializer_class = ArticleSerializer
+
+    def get_permissions(self):
+        if self.request.method == 'POST':
+            return [IsAuthenticated()]
+        return [AllowAny()]
+
+    def perform_create(self, serializer):
+        serializer.save(auteur=self.request.user)
 
 class ArticleDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Article.objects.all()

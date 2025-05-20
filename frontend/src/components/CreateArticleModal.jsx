@@ -14,12 +14,29 @@ const CreateArticleModal = ({ isOpen, onRequestClose, user, onArticleCreated }) 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!imageBanner) {
+      setMessage("❌ Merci de sélectionner une image.");
+      return;
+    }
+
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+    if (!allowedTypes.includes(imageBanner.type)) {
+      setMessage("❌ Format d'image non supporté. Utilise JPEG ou PNG.");
+      return;
+    }
+
+    // Renommer l'image (ex: titre-timestamp.jpg)
+    const extension = imageBanner.name.split('.').pop();
+    const newFileName = `${titre.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_${Date.now()}.${extension}`;
+    const renamedFile = new File([imageBanner], newFileName, { type: imageBanner.type });
+
     const formData = new FormData();
     formData.append('titre', titre);
     formData.append('categorie', categorie);
     formData.append('contenu', contenu);
-    formData.append('image_banner', imageBanner);
-    formData.append('auteur', user.id);
+    formData.append('image_banner', renamedFile);
+    formData.append('auteur', user.id); // utile seulement si le back l'attend
 
     try {
       const token = localStorage.getItem("access_token");
@@ -29,20 +46,21 @@ const CreateArticleModal = ({ isOpen, onRequestClose, user, onArticleCreated }) 
           'Authorization': `Bearer ${token}`,
         }
       });
-      console.log('Article créé :', response.data);
+
       setMessage('✨ Article créé avec succès !');
       onRequestClose();
       onArticleCreated();
     } catch (error) {
       if (error.response) {
         console.error('Erreur:', error.response.data);
-        setMessage('❌ Erreur lors de la création de l\'article.');
+        setMessage("❌ Erreur lors de la création de l'article.");
       } else {
         console.error('Erreur inconnue:', error.message);
-        setMessage('❌ Erreur inconnue lors de la création de l\'article.');
+        setMessage("❌ Erreur inconnue lors de la création de l'article.");
       }
     }
   };
+
 
   return (
     <Modal
