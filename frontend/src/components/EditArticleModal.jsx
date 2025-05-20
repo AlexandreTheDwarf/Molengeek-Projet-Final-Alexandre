@@ -63,14 +63,20 @@ const EditArticleModal = ({ isOpen, onRequestClose, article, onUpdated }) => {
     };
 
   return (
-    <Modal isOpen={isOpen} onRequestClose={onRequestClose} contentLabel="Modifier l'article">
-      <h2 className="text-xl font-bold mb-4">Modifier l’article</h2>
-      <form onSubmit={handleSubmit} className="space-y-3">
+    <Modal
+      isOpen={isOpen}
+      onRequestClose={onRequestClose}
+      contentLabel="Modifier l'article"
+      className="bg-mana-white text-mana-black border border-mana-gold rounded-lg shadow-magic max-w-xl mx-auto p-6"
+      overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+    >
+      <h2 className="text-2xl font-bold mb-6 font-magic text-mana-gold">Modifier l’article</h2>
+      <form onSubmit={handleSubmit} className="space-y-4">
         <input
           name="titre"
           value={formData.titre}
           onChange={handleChange}
-          className="w-full p-2 border rounded"
+          className="w-full p-3 border border-mana-gold rounded font-magic text-mana-black"
           placeholder="Titre"
           required
         />
@@ -78,7 +84,7 @@ const EditArticleModal = ({ isOpen, onRequestClose, article, onUpdated }) => {
           name="categorie"
           value={formData.categorie}
           onChange={handleChange}
-          className="w-full p-2 border rounded"
+          className="w-full p-3 border border-mana-gold rounded font-magic text-mana-black"
           required
         >
           <option value="news">News</option>
@@ -89,22 +95,23 @@ const EditArticleModal = ({ isOpen, onRequestClose, article, onUpdated }) => {
           name="contenu"
           value={formData.contenu}
           onChange={handleChange}
-          className="w-full p-2 border rounded"
+          className="w-full p-3 border border-mana-gold rounded font-magic text-mana-black"
           placeholder="Contenu"
           required
           rows={6}
         />
-        <label className="block text-gray-700 mb-2">
-          Image de la bannière (optionnel)
-        </label>
+        <label className="block text-mana-purple mb-2 font-magic">Image de la bannière (optionnel)</label>
         <input
           type="file"
           name="image_banner"
           onChange={handleChange}
-          className="w-full p-2 border rounded"
+          className="w-full p-2 border border-mana-gold rounded"
           accept="image/*"
         />
-        <button type="submit" className="w-full bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600">
+        <button
+          type="submit"
+          className="w-full bg-mana-gold text-mana-black font-magic py-3 rounded shadow-magic hover:bg-mana-green hover:text-mana-white transition"
+        >
           💾 Sauvegarder
         </button>
       </form>
