@@ -142,11 +142,6 @@ yarn dev
 
 ---
 
-## À venir
-
-* Gestion avancée des inscriptions (validation, annulation, notifications)
-* Amélioration de l’UI/UX sur mobile
-* Tests unitaires et intégration continue
 
 
 
