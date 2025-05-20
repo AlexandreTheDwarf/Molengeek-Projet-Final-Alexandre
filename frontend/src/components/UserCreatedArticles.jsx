@@ -53,26 +53,31 @@ const UserCreatedArticles = ({ refreshToggle, onArticleCreated }) => {
 
   return (
     <div className="mt-6">
-      <h2 className="text-xl font-bold mb-2">Mes articles rédigés</h2>
+      <h2 className="text-2xl font-magic font-bold mb-4 text-mana-gold drop-shadow-[0_0_8px_rgb(191,167,111)]">Mes articles rédigés</h2>
       {articles.map(article => (
-        <div key={article.id} className="bg-white p-4 mb-2 rounded shadow">
-          <p className="text-gray-700">
-            <span className="font-semibold">Titre :</span>{' '}
-            <Link to={`/articles/${article.id}`} className="text-blue-600 hover:underline">{article.titre}</Link>
+        <div key={article.id} className="bg-mana-gold bg-opacity-20 p-5 mb-4 rounded-lg shadow-magic border border-mana-gold">
+          <p className="text-mana-black font-semibold">
+            Titre :{' '}
+            <Link to={`/articles/${article.id}`} className="text-mana-blue hover:underline">
+              {article.titre}
+            </Link>
           </p>
-          <p className="text-gray-700">
+          <p className="text-mana-black mt-1">
             <span className="font-semibold">Catégorie :</span> {article.categorie}
           </p>
-          <p className="text-gray-700">
+          <p className="text-mana-black mt-1">
             <span className="font-semibold">Date :</span> {new Date(article.date_creation).toLocaleDateString()}
           </p>
-          <div className="flex gap-2 mt-2">
-            <button onClick={() => openEditModal(article)} className="bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-500">
+          <div className="flex gap-3 mt-4">
+            <button
+              onClick={() => openEditModal(article)}
+              className="bg-mana-gold hover:bg-mana-gold/80 text-mana-black font-bold py-2 px-4 rounded shadow-magic transition duration-300"
+            >
               ✏️ Modifier
             </button>
             <button
-              className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
               onClick={() => handleDelete(article.id)}
+              className="bg-mana-red hover:bg-mana-red/90 text-mana-white font-bold py-2 px-4 rounded shadow-magic transition duration-300"
             >
               🗑 Supprimer
             </button>

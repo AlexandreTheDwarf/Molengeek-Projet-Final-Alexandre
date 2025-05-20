@@ -87,39 +87,44 @@ const UserCreatedEvents = ({ refreshToggle }) => {
 
   return (
     <div className="mt-6">
-      <h2 className="text-xl font-bold mb-2">Mes événements organisés</h2>
+      <h2 className="text-2xl font-magic font-bold mb-4 text-mana-gold" style={{ textShadow: '0 0 4px rgba(191, 167, 111, 0.6)' }}>
+        Mes événements organisés
+      </h2>
       <button
         onClick={() => setShowArchived(!showArchived)}
-        className="mb-4 bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+        className="mb-4 bg-mana-green text-mana-black px-4 py-2 rounded hover:text-mana-gold hover:bg-mana-blue/90 transition"
       >
         {showArchived ? 'Voir les événements à venir' : 'Voir les événements passés'}
       </button>
       {events.map(event => (
-        <div key={event.id} className="bg-white p-4 mb-2 rounded shadow">
-          <p className="text-gray-700">
-            <span className="font-semibold">Nom :</span>{' '}
-            <Link to={`/events/${event.id}`} className="text-blue-600 hover:underline">{event.nom}</Link>
+        <div
+          key={event.id}
+          className="bg-mana-gold p-5 mb-4 rounded-lg border-2 border-mana-gold border-opacity-25"
+        >
+          <p className="text-mana-black font-semibold">
+            Nom :{' '}
+            <Link to={`/events/${event.id}`} className="text-mana-blue hover:underline">
+              {event.nom}
+            </Link>
           </p>
-          <p className="text-gray-700">
-            <span className="font-semibold">Date :</span>{' '}
-            {new Date(event.date).toLocaleDateString()}
+          <p className="text-mana-black mt-1">
+            <span className="font-semibold">Date :</span> {new Date(event.date).toLocaleDateString()}
           </p>
-          <p className="text-gray-700">
-            <span className="font-semibold">Inscriptions :</span>{' '}
-            {event.nombre_participant} / {event.nombre_participant_max}
+          <p className="text-mana-black mt-1">
+            <span className="font-semibold">Inscriptions :</span> {event.nombre_participant} / {event.nombre_participant_max}
           </p>
-          <div className="flex gap-2 mt-2">
+          <div className="flex gap-3 mt-4">
             {!isEventPast(new Date(event.date)) && (
               <>
                 <button
                   onClick={() => openEditModal(event)}
-                  className="bg-yellow-400 text-white px-3 py-1 rounded hover:bg-yellow-500"
+                  className="bg-mana-black/90 hover:bg-mana-blue/90 text-mana-gold hover:text-mana-black font-bold py-2 px-4 rounded transition duration-300"
                 >
                   ✏️ Modifier
                 </button>
                 <button
                   onClick={() => openManageModal(event.id)}
-                  className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
+                  className="bg-mana-green hover:bg-mana-green/90 text-mana-white font-bold py-2 px-4 rounded transition duration-300"
                 >
                   👥 Gérer les inscriptions
                 </button>
@@ -127,7 +132,7 @@ const UserCreatedEvents = ({ refreshToggle }) => {
             )}
             <button
               onClick={() => handleDelete(event.id)}
-              className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+              className="bg-mana-red hover:bg-mana-red/90 text-mana-white font-bold py-2 px-4 rounded transition duration-300"
             >
               🗑 Supprimer
             </button>

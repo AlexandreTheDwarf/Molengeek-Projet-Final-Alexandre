@@ -6,7 +6,7 @@ Modal.setAppElement('#root');
 
 const ManageInscriptionsModal = ({ isOpen, onRequestClose, eventId, onInscriptionsUpdated }) => {
   const [inscriptions, setInscriptions] = useState([]);
-  const [eventData, setEventData] = useState(null); // Pour récupérer les infos de l'event
+  const [eventData, setEventData] = useState(null);
   const [filterStatus, setFilterStatus] = useState('all');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -52,10 +52,8 @@ const ManageInscriptionsModal = ({ isOpen, onRequestClose, eventId, onInscriptio
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      // Rafraîchir les inscriptions dans la modale
       fetchInscriptions();
 
-      // Notifier le parent que quelque chose a changé
       if (onInscriptionsUpdated) {
         onInscriptionsUpdated();
       }
@@ -75,31 +73,24 @@ const ManageInscriptionsModal = ({ isOpen, onRequestClose, eventId, onInscriptio
       isOpen={isOpen}
       onRequestClose={onRequestClose}
       contentLabel="Gérer les inscriptions"
-      className="max-w-2xl mx-auto mt-20 bg-white p-6 rounded shadow-lg outline-none"
-      overlayClassName="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-start"
+      className="max-w-2xl mx-auto mt-20 bg-mana-white p-6 rounded-lg shadow-magic border border-mana-gold border-opacity-60 outline-none"
+      overlayClassName="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-start"
     >
-      <h2 className="text-2xl font-bold mb-4">👥 Gérer les Inscriptions</h2>
+      <h2 className="text-3xl font-magic font-bold mb-6 text-mana-gold drop-shadow-magic">👥 Gérer les Inscriptions</h2>
 
       {loading ? (
-        <p>Chargement...</p>
+        <p className="text-mana-black italic">Chargement des âmes inscrites...</p>
       ) : error ? (
-        <p className="text-red-500">Erreur : {error}</p>
+        <p className="text-mana-red font-semibold">Erreur : {error}</p>
       ) : (
         <>
-          {/* Suppression du compteur pour alléger l'affichage */}
-          {/* <p className={`mb-4 font-semibold ${
-            isFull ? 'text-red-600' : 'text-green-600'
-          }`}>
-            📊 Places utilisées : {eventData.nombre_participant} / {eventData.nombre_participant_max}
-          </p> */}
-
           <div className="mb-4">
-            <label htmlFor="filterStatus" className="mr-2 font-semibold">Filtrer par statut :</label>
+            <label htmlFor="filterStatus" className="mr-3 font-semibold text-mana-black">Filtrer par statut :</label>
             <select
               id="filterStatus"
               value={filterStatus}
               onChange={(e) => setFilterStatus(e.target.value)}
-              className="border rounded px-2 py-1"
+              className="border border-mana-gold rounded px-3 py-1 bg-mana-white text-mana-black shadow-inner focus:outline-none focus:ring-2 focus:ring-mana-gold"
             >
               <option value="all">Tous</option>
               <option value="en_attente">En attente</option>
@@ -109,24 +100,24 @@ const ManageInscriptionsModal = ({ isOpen, onRequestClose, eventId, onInscriptio
           </div>
 
           {filteredInscriptions.length === 0 ? (
-            <p className="text-gray-600 italic">Aucune inscription pour ce filtre 💡</p>
+            <p className="text-mana-black italic">Aucune inscription pour ce filtre 💡</p>
           ) : (
-            <div className="space-y-4 max-h-96 overflow-y-auto pr-2">
+            <div className="space-y-4 max-h-96 overflow-y-auto pr-3 scrollbar-thin scrollbar-thumb-mana-gold scrollbar-track-mana-white">
               {filteredInscriptions.map((inscription) => (
-                <div key={inscription.id} className="bg-gray-50 p-4 rounded shadow-sm">
-                  <p><strong>Utilisateur :</strong> {inscription.player.username}</p>
-                  <p><strong>Deck :</strong> {inscription.deck}</p>
-                  <p><strong>Statut :</strong> {inscription.etat}</p>
-                  <div className="flex gap-2 mt-2">
+                <div key={inscription.id} className="bg-mana-white border border-mana-gold rounded p-4 shadow-magic">
+                  <p className="text-mana-black font-semibold">Utilisateur : <span className="font-normal">{inscription.player.username}</span></p>
+                  <p className="text-mana-black font-semibold"> Deck :{' '}<a href={inscription.deck} target="_blank" rel="noopener noreferrer" className="text-mana-gold hover:underline"> {inscription.deck}</a> </p>
+                  <p className="text-mana-black font-semibold">Statut : <span className="font-normal capitalize">{inscription.etat}</span></p>
+                  <div className="flex gap-3 mt-3">
                     <button
                       onClick={() => handleUpdateInscriptionStatus(inscription.id, 'valide')}
-                      className="bg-green-500 text-white px-3 py-1 rounded hover:bg-green-600"
+                      className="bg-mana-green hover:bg-mana-green/80 text-mana-white px-4 py-1 rounded shadow-magic transition"
                     >
                       ✅ Valider
                     </button>
                     <button
                       onClick={() => handleUpdateInscriptionStatus(inscription.id, 'refuse')}
-                      className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                      className="bg-mana-red hover:bg-mana-red/80 text-mana-white px-4 py-1 rounded shadow-magic transition"
                     >
                       ❌ Refuser
                     </button>
@@ -138,16 +129,16 @@ const ManageInscriptionsModal = ({ isOpen, onRequestClose, eventId, onInscriptio
         </>
       )}
 
-      <div className="mt-6 text-right">
+      <div className="mt-8 text-right">
         <button
           onClick={onRequestClose}
-          className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
+          className="bg-mana-gold text-mana-black px-5 py-2 rounded hover:bg-mana-gold/80 font-magic font-semibold transition shadow-magic"
         >
           Fermer
         </button>
       </div>
     </Modal>
-  )};
+  );
+};
 
-  export default ManageInscriptionsModal;
-
+export default ManageInscriptionsModal;

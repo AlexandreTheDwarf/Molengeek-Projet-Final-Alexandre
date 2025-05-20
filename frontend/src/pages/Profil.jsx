@@ -23,18 +23,6 @@ export default function ProfilePage() {
     last_name: '',
   });
 
-  // State for event creation modal
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [nom, setNom] = useState('');
-  const [description, setDescription] = useState('');
-  const [bracketLevel, setBracketLevel] = useState('1');
-  const [format, setFormat] = useState('commander');
-  const [bannerImg, setBannerImg] = useState(null);
-  const [nombreParticipant, setNombreParticipant] = useState(0);
-  const [date, setDate] = useState('');
-  const [irl, setIrl] = useState(false);
-  const [lieux, setLieux] = useState('');
-
   const [eventModalIsOpen, setEventModalIsOpen] = useState(false);
   const [articleModalIsOpen, setArticleModalIsOpen] = useState(false);
 
@@ -56,21 +44,22 @@ export default function ProfilePage() {
         });
         setLoading(false);
       } catch (error) {
-        console.error("Erreur lors de la récupération de l'utilisateur :", error);
-        setError(error.message);
-        setLoading(false);
+        if (error.response && error.response.status === 401) {
+          navigate('/login', { state: { message: 'Désolé, veuillez vous reconnecter.' } });
+        } else {
+          console.error("Erreur lors de la récupération de l'utilisateur :", error);
+          setError(error.message);
+          setLoading(false);
+        }
       }
     };
 
     fetchUser();
-  }, []);
+  }, [navigate]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    setFormData({...formData, [name]: value});
   };
 
   const handleSubmitProfile = async (e) => {
@@ -89,184 +78,143 @@ export default function ProfilePage() {
     }
   };
 
-  const handleSubmitEvent = async (e) => {
-    e.preventDefault();
-    const formData = new FormData();
-    formData.append('nom', nom);
-    formData.append('description', description);
-    formData.append('bracket_level', bracketLevel);
-    formData.append('format', format);
-    formData.append('banner_img', bannerImg);
-    formData.append('nombre_participant_max', nombreParticipant);
-    formData.append('date', date);
-    formData.append('IRL', irl);
-    formData.append('lieux', lieux);
-    formData.append('author', user.id);
-
-    try {
-      const token = localStorage.getItem("access_token");
-      const response = await axios.post('http://localhost:8000/api/events/', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization': `Bearer ${token}`,
-        }
-      });
-      console.log('Event créé :', response.data);
-      setMessage('Événement créé avec succès!');
-      setModalIsOpen(false);
-    } catch (error) {
-      if (error.response) {
-        console.error('Erreur:', error.response.data);
-        setMessage('Erreur lors de la création de l\'événement.');
-      } else {
-        console.error('Erreur inconnue:', error.message);
-        setMessage('Erreur inconnue lors de la création de l\'événement.');
-      }
-    }
-  };
-
   const [refreshToggle, setRefreshToggle] = useState(false);
   const [refreshArticlesToggle, setRefreshArticlesToggle] = useState(false);
 
-  const handleEventCreated = () => {
-    setRefreshToggle(prev => !prev); // toggle force un effet useEffect
-  };
+  const handleEventCreated = () => setRefreshToggle(prev => !prev);
+  const handleArticleCreatedOrUpdated = () => setRefreshArticlesToggle(prev => !prev);
 
-  const handleArticleCreatedOrUpdated = () => {
-    setRefreshArticlesToggle(prev => !prev);
-  };
-
-  if (loading) return <div className="text-center py-4">Loading...</div>;
-  if (error) return <div className="text-center py-4 text-red-500">Error: {error}</div>;
-  if (!user) return <div className="text-center py-4">No user found</div>;
+  if (loading) return <div className="text-mana-gold text-center py-6 font-magic text-lg animate-pulse">Chargement... ✨</div>;
+  if (error) return <div className="text-red-600 text-center py-6 font-magic text-lg">Erreur : {error}</div>;
+  if (!user) return <div className="text-mana-red text-center py-6 font-magic text-lg">Utilisateur introuvable</div>;
 
   return (
-    <div className="flex flex-col md:flex-row">
+    <div className="flex flex-col md:flex-row font-magic bg-mana-black min-h-screen text-mana-white">
       {/* Sidebar */}
-      <div className="w-full md:w-1/4 bg-gray-100 p-4">
-        <h1 className="text-2xl font-bold mb-4">Profil</h1>
+      <aside className="w-full md:w-1/4 bg-mana-gold p-6 rounded-lg shadow-magic flex flex-col items-center space-y-6 border border-mana-gold">
+        <h1 className="text-3xl font-extrabold tracking-wide drop-shadow-md mb-6">Profil</h1>
+
         {editMode ? (
-          <form onSubmit={handleSubmitProfile} className="space-y-4">
-            <div>
-              <label className="block text-gray-700 mb-2">Nom d'utilisateur</label>
+          <form onSubmit={handleSubmitProfile} className="w-full space-y-5">
+            <label className="block">
+              <span className="text-mana-gold mb-1 block">Nom d'utilisateur</span>
               <input
                 type="text"
                 name="username"
                 value={formData.username}
                 onChange={handleInputChange}
-                className="w-full p-2 border rounded"
+                className="w-full rounded-md border border-mana-gold bg-mana-black px-3 py-2 focus:outline-none focus:ring-2 focus:ring-mana-gold text-mana-white"
+                required
               />
-            </div>
-            <div>
-              <label className="block text-gray-700 mb-2">Email</label>
+            </label>
+
+            <label className="block">
+              <span className="text-mana-gold mb-1 block">Email</span>
               <input
                 type="email"
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className="w-full p-2 border rounded"
+                className="w-full rounded-md border border-mana-gold bg-mana-black px-3 py-2 focus:outline-none focus:ring-2 focus:ring-mana-gold text-mana-white"
+                required
               />
-            </div>
-            <div>
-              <label className="block text-gray-700 mb-2">Prénom</label>
+            </label>
+
+            <label className="block">
+              <span className="text-mana-gold mb-1 block">Prénom</span>
               <input
                 type="text"
                 name="first_name"
                 value={formData.first_name}
                 onChange={handleInputChange}
-                className="w-full p-2 border rounded"
+                className="w-full rounded-md border border-mana-gold bg-mana-black px-3 py-2 focus:outline-none focus:ring-2 focus:ring-mana-gold text-mana-white"
               />
-            </div>
-            <div>
-              <label className="block text-gray-700 mb-2">Nom</label>
+            </label>
+
+            <label className="block">
+              <span className="text-mana-gold mb-1 block">Nom</span>
               <input
                 type="text"
                 name="last_name"
                 value={formData.last_name}
                 onChange={handleInputChange}
-                className="w-full p-2 border rounded"
+                className="w-full rounded-md border border-mana-gold bg-mana-black px-3 py-2 focus:outline-none focus:ring-2 focus:ring-mana-gold text-mana-white"
               />
-            </div>
+            </label>
+
             <button
               type="submit"
-              className="w-full bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+              className="w-full bg-mana-green hover:bg-mana-blue text-mana-white font-bold py-3 rounded-lg shadow-magic transition-all duration-300"
             >
               Mettre à jour le profil
             </button>
           </form>
-          
         ) : (
-          <div className="max-w-md mx-auto bg-white shadow-lg rounded-xl p-6 flex flex-col items-center space-y-4">
-            {/* Avatar dans un carré arrondi */}
-            <div className="w-40 h-40 rounded-lg overflow-hidden border-4 border-gray-200">
-                <img
+          <div className="w-full bg-mana-black bg-opacity-50 rounded-xl p-6 flex flex-col items-center shadow-magic border border-mana-gold">
+            <div className="w-40 h-40 rounded-lg overflow-hidden border-4 border-mana-gold mb-5">
+              <img
                 src={`https://api.dicebear.com/9.x/rings/svg?seed=${user.username}`}
                 alt="avatar"
                 className="w-full h-full object-cover"
-                />
+              />
             </div>
 
-            {/* Infos utilisateur */}
-            <div className="text-center space-y-1">
-                <p className="text-gray-700">
-                <span className="font-semibold">Nom d'utilisateur :</span> {user.username}
-                </p>
-                <p className="text-gray-700">
-                <span className="font-semibold">Email :</span> {user.email}
-                </p>
-                <p className="text-gray-700">
-                <span className="font-semibold">Prénom :</span> {user.first_name}
-                </p>
-                <p className="text-gray-700">
-                <span className="font-semibold">Nom :</span> {user.last_name}
-                </p>
-                {message && <div className="text-center py-4 text-green-500">{message}</div>}
+            <div className="text-center space-y-2">
+              <p><span className="font-bold text-mana-gold">Nom d'utilisateur :</span> {user.username}</p>
+              <p><span className="font-bold text-mana-gold">Email :</span> {user.email}</p>
+              <p><span className="font-bold text-mana-gold">Prénom :</span> {user.first_name}</p>
+              <p><span className="font-bold text-mana-gold">Nom :</span> {user.last_name}</p>
+              {message && <div className="mt-4 text-green-400 font-semibold">{message}</div>}
             </div>
 
-            {/* Bouton en bas */}
-            <div className="w-full pt-4">
-                <button
-                onClick={() => setEditMode(true)}
-                className="w-full bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition"
-                >
-                ✏️ Modifier le profil
-                </button>
-            </div>
-        </div>
+            <button
+              onClick={() => setEditMode(true)}
+              className="mt-6 w-full bg-mana-green hover:bg-mana-blue text-mana-white font-bold py-3 rounded-lg shadow-magic transition-all duration-300"
+            >
+              ✏️ Modifier le profil
+            </button>
+          </div>
         )}
-      </div>
+      </aside>
 
       {/* Dashboard */}
-      <div className="w-full md:w-3/4 p-4">
-        <h1 className="text-2xl font-bold mb-4">Tableau de Bord</h1>
-        <div className='flex flex-wrap gap-4 mb-4'>
-            {user.roles && user.roles.includes('Organisateur') && (
-            <button
-                onClick={() => setEventModalIsOpen(true)}
-                className="bg-purple-500 text-white py-2 px-4 rounded hover:bg-purple-600"
-            >
-                Créer un Événement
-            </button>
-            )}
+      <main className="w-full md:w-3/4 p-8 bg-mana-black bg-opacity-70 rounded-lg ml-0 md:ml-6 shadow-magic border border-mana-gold">
+        <h1 className="text-3xl font-extrabold text-mana-gold mb-6 tracking-wider drop-shadow-md">Tableau de Bord</h1>
 
-            {user.roles && user.roles.includes('Redacteur') && (
+        <div className="flex flex-wrap gap-4 mb-6">
+          {user.roles && user.roles.includes('Organisateur') && (
             <button
-                onClick={() => setArticleModalIsOpen(true)}
-                className="bg-purple-500 text-white py-2 px-4 rounded hover:bg-purple-600"
+              onClick={() => setEventModalIsOpen(true)}
+              className="bg-mana-purple hover:bg-mana-blue text-mana-white font-bold py-2 px-5 rounded-lg shadow-magic transition-colors duration-300"
             >
-                Créer un Article
+              Créer un Événement
             </button>
-            )}
+          )}
+
+          {user.roles && user.roles.includes('Redacteur') && (
+            <button
+              onClick={() => setArticleModalIsOpen(true)}
+              className="bg-mana-purple hover:bg-mana-blue text-mana-white font-bold py-2 px-5 rounded-lg shadow-magic transition-colors duration-300"
+            >
+              Créer un Article
+            </button>
+          )}
         </div>
 
-        {user.roles && user.roles.includes('Redacteur') && <UserCreatedArticles refreshToggle={refreshArticlesToggle} />}
+        {user.roles && user.roles.includes('Redacteur') && (
+          <UserCreatedArticles refreshToggle={refreshArticlesToggle} />
+        )}
 
-        {user.roles && user.roles.includes('Organisateur') && <UserCreatedEvents refreshToggle={refreshToggle} onArticleCreated={handleArticleCreatedOrUpdated} user={user}/>}
+        {user.roles && user.roles.includes('Organisateur') && (
+          <UserCreatedEvents
+            refreshToggle={refreshToggle}
+            onArticleCreated={handleArticleCreatedOrUpdated}
+            user={user}
+          />
+        )}
 
-        {/* User Inscriptions */}
         <UserInscriptions user={user} />
 
-        {/* Modal for event creation */}
         <CreateEventModal
           isOpen={eventModalIsOpen}
           onRequestClose={() => setEventModalIsOpen(false)}
@@ -274,15 +222,13 @@ export default function ProfilePage() {
           onEventCreated={handleEventCreated}
         />
 
-        {/* Modal for article creation */}
         <CreateArticleModal
           isOpen={articleModalIsOpen}
           onRequestClose={() => setArticleModalIsOpen(false)}
           user={user}
           onArticleCreated={handleArticleCreatedOrUpdated}
         />
-      </div>
-
+      </main>
     </div>
   );
 }

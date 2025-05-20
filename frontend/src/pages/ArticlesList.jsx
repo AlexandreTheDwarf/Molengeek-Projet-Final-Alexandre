@@ -54,20 +54,22 @@ export default function ArticlesList() {
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-  if (loading) return <div className="text-center py-4">Loading...</div>;
-  if (error) return <div className="text-center py-4 text-red-500">Error: {error}</div>;
+  if (loading) return <div className="text-center py-4 text-mana-gold font-magic">Chargement...</div>;
+  if (error) return <div className="text-center py-4 text-red-600 font-magic">Erreur : {error}</div>;
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-6">Articles</h1>
+    <div className="container mx-auto p-6 bg-mana-white rounded-lg shadow-magic">
+      <h1 className="text-4xl font-magic font-bold mb-8 text-mana-gold text-center drop-shadow-[0_0_6px_rgba(191,167,111,0.8)]">
+        Articles Magiques
+      </h1>
 
-      {/* Filter for category */}
-      <div className="mb-4">
-        <label className="block text-gray-700 mb-2">Filtrer par catégorie:</label>
+      {/* Filtre */}
+      <div className="mb-6 max-w-sm mx-auto">
+        <label className="block mb-2 font-magic text-mana-purple text-lg">Filtrer par catégorie :</label>
         <select
           value={categoryFilter}
           onChange={(e) => setCategoryFilter(e.target.value)}
-          className="w-full p-2 border rounded"
+          className="w-full p-3 border border-mana-gold rounded font-magic text-mana-black focus:outline-none focus:ring-2 focus:ring-mana-gold"
         >
           <option value="all">Tous</option>
           <option value="news">News</option>
@@ -76,37 +78,45 @@ export default function ArticlesList() {
         </select>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {/* Liste des articles */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {currentArticles.map(article => (
           <div
             key={article.id}
             data-aos="fade-up"
-            className="bg-white p-4 rounded-lg shadow-md cursor-pointer hover:shadow-lg transition-shadow"
+            className="bg-mana-white border border-mana-gold rounded-lg shadow-magic cursor-pointer hover:shadow-[0_0_20px_rgba(191,167,111,0.7)] transition duration-300 flex flex-col"
+            onClick={() => handleArticleClick(article.id)}
           >
             <img
               src={article.image_banner}
               alt={article.titre}
-              className="w-full h-48 object-cover rounded mb-2"
+              className="w-full h-48 object-cover rounded-t-lg"
             />
-            <h2 className="text-xl font-semibold mb-2">{article.titre}</h2>
-            <p className="text-gray-700"><span className="font-semibold">Catégorie:</span> {article.categorie}</p>
-            <button
-              onClick={() => handleArticleClick(article.id)}
-              className="mt-2 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition"
-            >
-              Voir l'article
-            </button>
+            <div className="p-4 flex flex-col flex-grow">
+              <h2 className="text-2xl font-magic font-semibold mb-2 text-mana-purple drop-shadow-[0_0_4px_rgba(75,49,114,0.8)]">{article.titre}</h2>
+              <p className="text-mana-black mb-4"><span className="font-semibold">Catégorie :</span> {article.categorie}</p>
+              <button
+                onClick={(e) => { e.stopPropagation(); handleArticleClick(article.id); }}
+                className="mt-auto bg-mana-gold text-mana-black font-magic py-2 rounded shadow-magic hover:bg-mana-purple hover:text-mana-white transition"
+              >
+                Voir l'article
+              </button>
+            </div>
           </div>
         ))}
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-center mt-4">
+      <div className="flex justify-center mt-10 space-x-2">
         {Array.from({ length: Math.ceil(filteredArticles.length / articlesPerPage) }, (_, i) => (
           <button
             key={i}
             onClick={() => paginate(i + 1)}
-            className={`mx-1 px-3 py-1 rounded ${currentPage === i + 1 ? 'bg-blue-500 text-white' : 'bg-gray-200'}`}
+            className={`px-4 py-2 rounded font-magic ${
+              currentPage === i + 1
+                ? 'bg-mana-gold text-mana-black shadow-magic'
+                : 'bg-mana-purple text-mana-white hover:bg-mana-gold hover:text-mana-black transition'
+            }`}
           >
             {i + 1}
           </button>
