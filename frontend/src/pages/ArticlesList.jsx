@@ -11,7 +11,7 @@ export default function ArticlesList() {
   const [error, setError] = useState(null);
   const [categoryFilter, setCategoryFilter] = useState('all'); // 'all', 'news', 'guide', 'avis'
   const [currentPage, setCurrentPage] = useState(1);
-  const articlesPerPage = 10;
+  const articlesPerPage = 9;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -114,8 +114,8 @@ export default function ArticlesList() {
             onClick={() => paginate(i + 1)}
             className={`px-4 py-2 rounded font-magic ${
               currentPage === i + 1
-                ? 'bg-mana-gold text-mana-black shadow-magic'
-                : 'bg-mana-purple text-mana-white hover:bg-mana-gold hover:text-mana-black transition'
+                ? 'bg-mana-purple text-mana-white shadow-magic'
+                : 'bg-mana-gold text-mana-black hover:bg-mana-black hover:text-mana-gold transition'
             }`}
           >
             {i + 1}
