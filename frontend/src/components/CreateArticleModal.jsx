@@ -30,16 +30,16 @@ const CreateArticleModal = ({ isOpen, onRequestClose, user, onArticleCreated }) 
         }
       });
       console.log('Article créé :', response.data);
-      setMessage('Article créé avec succès!');
+      setMessage('✨ Article créé avec succès !');
       onRequestClose();
       onArticleCreated();
     } catch (error) {
       if (error.response) {
         console.error('Erreur:', error.response.data);
-        setMessage('Erreur lors de la création de l\'article.');
+        setMessage('❌ Erreur lors de la création de l\'article.');
       } else {
         console.error('Erreur inconnue:', error.message);
-        setMessage('Erreur inconnue lors de la création de l\'article.');
+        setMessage('❌ Erreur inconnue lors de la création de l\'article.');
       }
     }
   };
@@ -49,25 +49,27 @@ const CreateArticleModal = ({ isOpen, onRequestClose, user, onArticleCreated }) 
       isOpen={isOpen}
       onRequestClose={onRequestClose}
       contentLabel="Créer un Article"
+      className="bg-mana-white border-4 border-mana-gold rounded-lg shadow-magic p-6 max-w-2xl mx-auto mt-20 font-magic"
+      overlayClassName="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50"
     >
-      <h2 className="text-2xl font-bold mb-4">Créer un Article</h2>
+      <h2 className="text-3xl text-mana-gold drop-shadow mb-6 text-center">Créer un Article</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-gray-700 mb-2">Titre</label>
+          <label className="block text-mana-black mb-1">Titre</label>
           <input
             type="text"
             value={titre}
             onChange={(e) => setTitre(e.target.value)}
-            className="w-full p-2 border rounded"
-            placeholder="Titre"
+            className="w-full p-2 border border-mana-gold rounded bg-mana-white text-mana-black"
+            placeholder="Titre de l'article"
           />
         </div>
         <div>
-          <label className="block text-gray-700 mb-2">Catégorie</label>
+          <label className="block text-mana-black mb-1">Catégorie</label>
           <select
             value={categorie}
             onChange={(e) => setCategorie(e.target.value)}
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border border-mana-gold rounded bg-mana-white text-mana-black"
           >
             <option value="news">News</option>
             <option value="guide">Guide</option>
@@ -75,30 +77,33 @@ const CreateArticleModal = ({ isOpen, onRequestClose, user, onArticleCreated }) 
           </select>
         </div>
         <div>
-          <label className="block text-gray-700 mb-2">Contenu</label>
+          <label className="block text-mana-black mb-1">Contenu</label>
           <textarea
             value={contenu}
             onChange={(e) => setContenu(e.target.value)}
-            className="w-full p-2 border rounded"
-            placeholder="Contenu"
+            className="w-full p-2 border border-mana-gold rounded bg-mana-white text-mana-black"
+            placeholder="Écris ton article ici"
+            rows="6"
           />
         </div>
         <div>
-          <label className="block text-gray-700 mb-2">Image de la bannière</label>
+          <label className="block text-mana-black mb-1">Image de la bannière</label>
           <input
             type="file"
             onChange={(e) => setImageBanner(e.target.files[0])}
-            className="w-full p-2 border rounded"
+            className="w-full p-2 border border-mana-gold rounded bg-mana-white text-mana-black"
           />
         </div>
         <button
           type="submit"
-          className="w-full bg-purple-500 text-white py-2 px-4 rounded hover:bg-purple-600"
+          className="w-full bg-mana-purple text-white py-2 px-4 rounded shadow-magic hover:bg-mana-gold hover:text-mana-black transition-all duration-300"
         >
-          Créer l'article
+          ✨ Créer l'article
         </button>
       </form>
-      {message && <div className="text-center py-4 text-green-500">{message}</div>}
+      {message && (
+        <div className="text-center py-4 text-mana-green text-lg">{message}</div>
+      )}
     </Modal>
   );
 };
