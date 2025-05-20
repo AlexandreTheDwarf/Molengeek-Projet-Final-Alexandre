@@ -62,6 +62,12 @@ class InscriptionListView(generics.ListAPIView):
 class InscriptionListCreateView(generics.ListCreateAPIView):
     queryset = Inscription.objects.all()
     serializer_class = InscriptionSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        event_id = self.request.data.get('event')
+        event = Event.objects.get(id=event_id)
+        serializer.save(player=self.request.user, event=event)
 
 class InscriptionDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Inscription.objects.all()

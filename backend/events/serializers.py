@@ -32,12 +32,19 @@ class EventSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class InscriptionSerializer(serializers.ModelSerializer):
-    event = EventLightSerializer()
-    player = UserSerializer()
+    event = EventLightSerializer(read_only=True)
+    player = UserSerializer(read_only=True)
 
     class Meta:
         model = Inscription
         fields = ['id', 'event', 'player', 'deck', 'etat']
+
+    def validate(self, data):
+        event = data.get('event')
+        player = data.get('player')
+        if Inscription.objects.filter(event=event, player=player).exists():
+            raise serializers.ValidationError("Tu es déjà inscrit à cet événement, mon tendre développeur. Nia~")
+        return data
 
 class AvisEventSerializer(serializers.ModelSerializer):
     class Meta:

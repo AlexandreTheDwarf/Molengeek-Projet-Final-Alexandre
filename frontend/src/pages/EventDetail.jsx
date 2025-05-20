@@ -69,6 +69,12 @@ export default function EventDetail() {
 
   const handleInscriptionSubmit = async (e) => {
     e.preventDefault();
+
+    if (!user) {
+      setMessage("Vous devez être connecté pour vous inscrire.");
+      return;
+    }
+
     if (isRegistered) {
       setMessage('Vous êtes déjà inscrit à cet événement.');
       return;
@@ -85,12 +91,15 @@ export default function EventDetail() {
     formData.append('deck', deck);
 
     try {
+      const token = localStorage.getItem("access_token"); // récupère le token
+
       const response = await axios.post('http://localhost:8000/api/inscriptions/', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
-          'X-CSRFToken': 'your_csrf_token_here'
+          'Authorization': `Bearer ${token}` // 🔥 AJOUT DU TOKEN
         }
       });
+
       console.log('Inscription créée :', response.data);
       setDeck('');
       setMessage('Inscription réussie!');
@@ -195,12 +204,14 @@ export default function EventDetail() {
           <div className="bg-mana-white border border-mana-gold shadow-magic p-6 rounded-lg mb-6">
             <h2 className="text-2xl font-bold font-magic text-mana-gold mb-4">Inscription</h2>
 
-            {event.nombre_participant >= event.nombre_participant_max || isRegistered ? (
-              message && (
-                <div className="text-center text-mana-gold bg-mana-black rounded font-magic py-4 mt-4">
-                  {message}
-                </div>
-              )
+            {(event.nombre_participant >= event.nombre_participant_max || isRegistered) ? (
+              <div className="text-center text-mana-gold bg-mana-black rounded font-magic py-4 mt-4">
+                <span>
+                  {event.nombre_participant >= event.nombre_participant_max 
+                    ? "Désolé, l'événement est complet." 
+                    : "Vous êtes déjà inscrit à cet événement."}
+                </span>
+              </div>
             ) : (
               <form onSubmit={handleInscriptionSubmit} className="space-y-4">
                 <div>
