@@ -109,7 +109,7 @@ function Home({ setMessage }) {
         <h2 className="text-3xl font-bold mb-6 text-mana-gold">Early Events</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {earlyEvents.map(event => (
-            <div key={event.id} className="bg-mana-gold p-6 rounded-lg shadow-magic cursor-pointer hover:shadow-xl transition-shadow" data-aos="zoom-in">
+            <div key={event.id} className="bg-mana-gold p-6 rounded-lg shadow-magic cursor-pointer hover:shadow-xl transition-shadow flex flex-col justify-between" data-aos="zoom-in">
               <img src={event.banner_img} alt={event.nom} className="w-full h-48 object-cover rounded mb-4" />
               <h3 className="text-2xl font-semibold mb-2 text-mana-black">{event.nom}</h3>
               <p className="mb-1 text-mana-black">Date : {formatDate(event.date)}</p>
@@ -137,13 +137,13 @@ function Home({ setMessage }) {
         <h2 className="text-3xl font-bold mb-6 text-mana-gold">Last Chance Events</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {lastChanceEvents.map(event => (
-            <div key={event.id} className="bg-mana-gold p-6 rounded-lg shadow-magic cursor-pointer hover:shadow-xl transition-shadow" data-aos="zoom-in">
+            <div key={event.id} className="bg-mana-gold p-6 rounded-lg shadow-magic cursor-pointer hover:shadow-xl transition-shadow flex flex-col justify-between" data-aos="zoom-in">
               <img src={event.banner_img} alt={event.nom} className="w-full h-48 object-cover rounded mb-4" />
-              <h3 className="text-2xl font-semibold mb-2 text-mana-black">{event.nom}</h3>
-              <p className="mb-1 text-mana-black">Date : {formatDate(event.date)}</p>
-              <p className="mb-1 text-mana-red font-bold">Participants : {event.nombre_participant}/{event.nombre_participant_max}</p>
-              <p className="mb-1 text-mana-black">Format : {event.format}</p>
-              {event.format === "commander" && <p className="mb-2 text-mana-black">Bracket Level : {event.bracket_level}</p>}
+                <h3 className="text-2xl font-semibold mb-2 text-mana-black">{event.nom}</h3>
+                <p className="mb-1 text-mana-black">Date : {formatDate(event.date)}</p>
+                <p className="mb-1 text-mana-red font-bold">Participants : {event.nombre_participant}/{event.nombre_participant_max}</p>
+                <p className="mb-1 text-mana-black">Format : {event.format}</p>
+                {event.format === "commander" && <p className="mb-2 text-mana-black">Bracket Level : {event.bracket_level}</p>}
               <button
                 onClick={() => navigate(`/events/${event.id}`)}
                 className="mt-3 w-full bg-mana-black text-mana-gold font-bold py-2 rounded hover:bg-mana-white hover:text-mana-black transition-colors duration-300"
@@ -160,10 +160,13 @@ function Home({ setMessage }) {
         <h2 className="text-3xl font-bold mb-6 text-mana-gold">Derniers Articles</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {latestArticles.map(article => (
-            <div key={article.id} className="bg-mana-gold p-6 rounded-lg shadow-magic cursor-pointer hover:shadow-xl transition-shadow" data-aos="zoom-in">
-              <img src={article.image_banner} alt={article.titre} className="w-full h-48 object-cover object-top rounded mb-4" />
+            <div key={article.id} className="bg-mana-gold p-6 rounded-lg shadow-magic cursor-pointer hover:shadow-xl transition-shadow flex flex-col justify-between" data-aos="zoom-in">
+              <img src={article.image_banner} alt={article.titre} className="w-full h-48 object-cover object-center rounded mb-4" />
               <h3 className="text-2xl font-semibold mb-2 text-mana-black">{article.titre}</h3>
-              <p className="mb-4 text-mana-black">{article.categorie}</p>
+              <div className="flex justify-between">
+                <p className="mb-4 text-mana-black">{article.categorie}</p>
+                <p className="mb-1 text-mana-black">Date : {formatDate(article.date_creation)}</p>
+              </div>
               <button
                 onClick={() => navigate(`/articles/${article.id}`)}
                 className="w-full bg-mana-black text-mana-gold font-bold py-2 rounded hover:bg-mana-white hover:text-mana-black transition-colors duration-300"
