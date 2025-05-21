@@ -72,6 +72,7 @@ const CreateEventModal = ({ isOpen, onRequestClose, user, onEventCreated }) => {
             onChange={(e) => setNom(e.target.value)}
             className="w-full p-2 border rounded"
             placeholder="Nom"
+            required
           />
         </div>
         <div>
@@ -81,6 +82,7 @@ const CreateEventModal = ({ isOpen, onRequestClose, user, onEventCreated }) => {
             onChange={(e) => setDescription(e.target.value)}
             className="w-full p-2 border rounded"
             placeholder="Description"
+            required
           />
         </div>
         <div>
@@ -115,6 +117,7 @@ const CreateEventModal = ({ isOpen, onRequestClose, user, onEventCreated }) => {
             type="file"
             onChange={(e) => setBannerImg(e.target.files[0])}
             className="w-full p-2 border rounded"
+            required
           />
         </div>
         <div>
@@ -125,6 +128,7 @@ const CreateEventModal = ({ isOpen, onRequestClose, user, onEventCreated }) => {
             onChange={(e) => setNombreParticipant(e.target.value)}
             className="w-full p-2 border rounded"
             placeholder="Nombre de participants"
+            required
           />
         </div>
         <div>
@@ -134,6 +138,7 @@ const CreateEventModal = ({ isOpen, onRequestClose, user, onEventCreated }) => {
             value={date}
             onChange={(e) => setDate(e.target.value)}
             className="w-full p-2 border rounded"
+            required
           />
         </div>
         <div>

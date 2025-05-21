@@ -1,102 +1,105 @@
-import { useNavigate } from "react-router-dom"
-import { useEffect, useState } from "react"
-import axios from "axios"
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { Menu, X } from "lucide-react";
 
 const Navbar = () => {
-  const navigate = useNavigate()
-  const [user, setUser] = useState(null)
+  const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const token = localStorage.getItem("access_token")
-        if (!token) return
+        const token = localStorage.getItem("access_token");
+        if (!token) return;
         const res = await axios.get("http://127.0.0.1:8000/api/get_user/", {
           headers: { Authorization: `Bearer ${token}` },
-        })
-        setUser(res.data.user)
+        });
+        setUser(res.data.user);
       } catch (err) {
-        console.error("Erreur récupération user dans Navbar :", err)
+        console.error("Erreur récupération user dans Navbar :", err);
       }
-    }
-    fetchUser()
-  }, [])
+    };
+    fetchUser();
+  }, []);
 
   const logout = () => {
-    localStorage.removeItem("access_token")
+    localStorage.removeItem("access_token");
     axios
       .post("http://127.0.0.1:8000/api/logout/")
       .then(() => {
-        setUser(null)
-        navigate("/")
+        setUser(null);
+        navigate("/");
       })
-      .catch((err) => console.error("Erreur déconnexion :", err))
-  }
+      .catch((err) => console.error("Erreur déconnexion :", err));
+  };
+
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen);
+  };
+
+  const handleNavigate = (path) => {
+    navigate(path);
+    setMenuOpen(false); // fermer le menu après navigation
+  };
 
   return (
-    <nav className="bg-mana-black text-mana-white font-magic shadow-magic px-6 py-4 mb-6">
-      <div className="container mx-auto flex flex-wrap items-center justify-between">
+    <nav className="bg-mana-black text-mana-white font-magic shadow-magic px-6 py-4 relative">
+      <div className="container mx-auto flex items-center justify-between">
         <div
-          onClick={() => navigate("/")}
-          className="cursor-pointer text-2xl font-bold text-mana-gold hover:text-mana-white transition-colors duration-300 select-none"
-          title="Retour à l'accueil"
+          onClick={() => handleNavigate("/")}
+          className="cursor-pointer text-2xl font-bold text-mana-gold hover:text-mana-white transition duration-300 select-none"
         >
           🧙‍♂️ EventMaster
         </div>
 
-        <div className="flex flex-wrap gap-3">
-          <button
-            onClick={() => navigate("/")}
-            className="bg-mana-blue hover:bg-mana-gold text-mana-white px-5 py-2 rounded shadow-inner transition-all duration-300 font-semibold"
-          >
-            Accueil
+        <div className="md:hidden">
+          <button onClick={toggleMenu} className="text-mana-gold hover:text-mana-white transition duration-300">
+            {menuOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
-          <button
-            onClick={() => navigate("/articles/")}
-            className="bg-mana-green hover:bg-mana-gold text-mana-white px-5 py-2 rounded shadow-inner transition-all duration-300 font-semibold"
-          >
-            Articles
-          </button>
-          <button
-            onClick={() => navigate("/events/")}
-            className="bg-mana-red hover:bg-mana-gold text-mana-white px-5 py-2 rounded shadow-inner transition-all duration-300 font-semibold"
-          >
-            Événements
-          </button>
+        </div>
 
+        {/* Menu desktop */}
+        <div className="hidden md:flex gap-3">
+          <button onClick={() => handleNavigate("/")} className="btn-nav bg-mana-blue">Accueil</button>
+          <button onClick={() => handleNavigate("/articles/")} className="btn-nav bg-mana-green">Articles</button>
+          <button onClick={() => handleNavigate("/events/")} className="btn-nav bg-mana-red">Événements</button>
           {!user ? (
-            <button
-              onClick={() => navigate("/login")}
-              className="bg-mana-gold hover:bg-mana-blue text-mana-black px-5 py-2 rounded shadow-inner transition-all duration-300 font-semibold"
-            >
-              Connexion
-            </button>
+            <button onClick={() => handleNavigate("/login")} className="btn-nav bg-mana-gold text-mana-black">Connexion</button>
           ) : (
             <>
-              <button
-                onClick={() => navigate("/profil")}
-                className="bg-mana-purple hover:bg-mana-gold text-mana-white px-5 py-2 rounded shadow-inner transition-all duration-300 font-semibold"
-              >
-                Profil
-              </button>
-              <button
-                onClick={logout}
-                className="bg-mana-gold hover:bg-mana-black text-mana-white px-5 py-2 rounded shadow-inner transition-all duration-300 font-semibold"
-              >
-                Déconnexion
-              </button>
+              <button onClick={() => handleNavigate("/profil")} className="btn-nav bg-mana-purple">Profil</button>
+              <button onClick={logout} className="btn-nav bg-mana-gold">Déconnexion</button>
             </>
           )}
         </div>
       </div>
 
+      {/* Menu mobile */}
+      {menuOpen && (
+        <div className="md:hidden mt-4 flex flex-col gap-3">
+          <button onClick={() => handleNavigate("/")} className="btn-nav-mobile bg-mana-blue">Accueil</button>
+          <button onClick={() => handleNavigate("/articles/")} className="btn-nav-mobile bg-mana-green">Articles</button>
+          <button onClick={() => handleNavigate("/events/")} className="btn-nav-mobile bg-mana-red">Événements</button>
+          {!user ? (
+            <button onClick={() => handleNavigate("/login")} className="btn-nav-mobile bg-mana-gold text-mana-black">Connexion</button>
+          ) : (
+            <>
+              <button onClick={() => handleNavigate("/profil")} className="btn-nav-mobile bg-mana-purple">Profil</button>
+              <button onClick={logout} className="btn-nav-mobile bg-mana-gold">Déconnexion</button>
+            </>
+          )}
+        </div>
+      )}
+
       {user && (
-        <div className="container mx-auto mt-3 text-mana-gold text-sm font-semibold select-none">
+        <div className="container mx-auto mt-3 text-mana-gold text-sm font-semibold select-none text-center">
           Bienvenue <span>{user.username}</span> !
         </div>
       )}
     </nav>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;

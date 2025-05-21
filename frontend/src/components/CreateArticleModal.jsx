@@ -80,6 +80,7 @@ const CreateArticleModal = ({ isOpen, onRequestClose, user, onArticleCreated }) 
             onChange={(e) => setTitre(e.target.value)}
             className="w-full p-2 border border-mana-gold rounded bg-mana-white text-mana-black"
             placeholder="Titre de l'article"
+            required
           />
         </div>
         <div>
@@ -102,6 +103,7 @@ const CreateArticleModal = ({ isOpen, onRequestClose, user, onArticleCreated }) 
             className="w-full p-2 border border-mana-gold rounded bg-mana-white text-mana-black"
             placeholder="Écris ton article ici"
             rows="6"
+            required
           />
         </div>
         <div>
@@ -109,6 +111,7 @@ const CreateArticleModal = ({ isOpen, onRequestClose, user, onArticleCreated }) 
           <input
             type="file"
             onChange={(e) => setImageBanner(e.target.files[0])}
+            required
             className="w-full p-2 border border-mana-gold rounded bg-mana-white text-mana-black"
           />
         </div>

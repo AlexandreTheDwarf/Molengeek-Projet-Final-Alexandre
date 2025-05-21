@@ -1,4 +1,5 @@
 // components/Layout.jsx
+import Footer from './footer'
 import Navbar from './Navbar'
 import { Outlet } from 'react-router-dom'
 
@@ -9,6 +10,7 @@ const Layout = () => {
       <main className="flex-1 container mx-auto p-4">
         <Outlet />
       </main>
+      <Footer/>
     </div>
   )
 }

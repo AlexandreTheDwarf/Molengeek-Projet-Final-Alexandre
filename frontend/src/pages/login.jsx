@@ -47,6 +47,7 @@ function Login(props) {
                             name="username"
                             value={formData.username}
                             onChange={change}
+                            required
                             className="w-full px-4 py-2 rounded bg-mana-black border border-mana-white focus:outline-none focus:ring-2 focus:ring-mana-white text-mana-white"
                         />
                     </div>
@@ -57,6 +58,7 @@ function Login(props) {
                             name="password"
                             value={formData.password}
                             onChange={change}
+                            required
                             className="w-full px-4 py-2 rounded bg-mana-black border border-mana-white focus:outline-none focus:ring-2 focus:ring-mana-white text-mana-white"
                         />
                     </div>

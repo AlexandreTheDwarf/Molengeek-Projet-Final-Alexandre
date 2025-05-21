@@ -60,6 +60,7 @@ function Register(props) {
                             name="username"
                             value={formData.username}
                             onChange={change}
+                            required
                             className="w-full px-4 py-2 rounded bg-mana-black border border-mana-gold focus:outline-none focus:ring-2 focus:ring-mana-gold text-mana-white"
                         />
                     </div>
@@ -70,6 +71,7 @@ function Register(props) {
                             name="lastname"
                             value={formData.lastname}
                             onChange={change}
+                            required
                             className="w-full px-4 py-2 rounded bg-mana-black border border-mana-gold focus:outline-none focus:ring-2 focus:ring-mana-gold text-mana-white"
                         />
                     </div>
@@ -80,6 +82,7 @@ function Register(props) {
                             name="firstname"
                             value={formData.firstname}
                             onChange={change}
+                            required
                             className="w-full px-4 py-2 rounded bg-mana-black border border-mana-gold focus:outline-none focus:ring-2 focus:ring-mana-gold text-mana-white"
                         />
                     </div>
@@ -90,6 +93,7 @@ function Register(props) {
                             name="email"
                             value={formData.email}
                             onChange={change}
+                            required
                             className="w-full px-4 py-2 rounded bg-mana-black border border-mana-gold focus:outline-none focus:ring-2 focus:ring-mana-gold text-mana-white"
                         />
                     </div>
@@ -100,6 +104,7 @@ function Register(props) {
                             name="password"
                             value={formData.password}
                             onChange={change}
+                            required
                             className="w-full px-4 py-2 rounded bg-mana-black border border-mana-gold focus:outline-none focus:ring-2 focus:ring-mana-gold text-mana-white"
                         />
                     </div>
@@ -110,15 +115,32 @@ function Register(props) {
                             name="confirmPassword"
                             value={formData.confirmPassword}
                             onChange={change}
+                            required
                             className="w-full px-4 py-2 rounded bg-mana-black border border-mana-gold focus:outline-none focus:ring-2 focus:ring-mana-gold text-mana-white"
                         />
                     </div>
                     <button
                         type="submit"
-                        className="w-full py-3 bg-mana-green text-mana-black font-bold rounded hover:bg-mana-white transition-colors duration-300"
+                        disabled={
+                            !formData.username ||
+                            !formData.lastname ||
+                            !formData.firstname ||
+                            !formData.email ||
+                            !formData.password ||
+                            !formData.confirmPassword ||
+                            formData.password !== formData.confirmPassword
+                        }
+                        className={`w-full py-3 font-bold rounded transition-colors duration-300
+                            ${
+                                formData.password === formData.confirmPassword &&
+                                formData.username &&
+                                formData.email
+                                    ? "bg-mana-green text-mana-black hover:bg-mana-white"
+                                    : "bg-mana-black text-mana-white opacity-50 cursor-not-allowed"
+                            }`}
                     >
                         Inscription
-                    </button>
+                   </button>
                 </form>
             </div>
         </div>
